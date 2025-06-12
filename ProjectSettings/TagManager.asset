@@ -8,6 +8,8 @@ TagManager:
   - CPR_End
   - CPR_Re
   - CPR_Mouth
+  - AEDPad
+  - AEDAttach
   layers:
   - Default
   - TransparentFX
