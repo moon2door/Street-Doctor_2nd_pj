@@ -82,7 +82,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         }
 
         PhotonNetwork.Instantiate("Player", SpawnLocation.transform.position, SpawnLocation.transform.rotation, 0);
+        
+        // 손 위치는 플레이어 기준으로 살짝 옆에 생성
+        Vector3 leftOffset = SpawnLocation.transform.position + Vector3.left * 0.2f;
+        Vector3 rightOffset = SpawnLocation.transform.position + Vector3.right * 0.2f;
 
+        PhotonNetwork.Instantiate("LeftHand", leftOffset, Quaternion.identity, 0);
+        PhotonNetwork.Instantiate("RightHand", rightOffset, Quaternion.identity, 0);
     }
 
 }
