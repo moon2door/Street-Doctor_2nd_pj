@@ -8,6 +8,8 @@ TagManager:
   - CPR_End
   - CPR_Re
   - CPR_Mouth
+  - Hand
+  - Grabbable
   layers:
   - Default
   - TransparentFX
