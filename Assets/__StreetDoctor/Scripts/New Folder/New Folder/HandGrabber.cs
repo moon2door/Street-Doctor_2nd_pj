@@ -70,6 +70,7 @@ public class HandGrabber : MonoBehaviour
         // Grab
         if (isPinching && target != null && !isGrabbingObject)
         {
+            Debug.Log($" {(handTransform == leftHandTransform ? "왼손" : "오른손")} 물체 잡음: {target.name}");
             target.Grab(handTransform);
         }
 
@@ -85,7 +86,7 @@ public class HandGrabber : MonoBehaviour
 
         if (isGrabbingObject && isPinchReleased)
         {
-            Debug.Log($"🔓 {(handTransform == leftHandTransform ? "왼손" : "오른손")} 핀치 해제 → 잡은 물체 놓기");
+            Debug.Log($" {(handTransform == leftHandTransform ? "왼손" : "오른손")} 핀치 해제 → 잡은 물체 놓기");
             target.Release();
             target = null;
         }

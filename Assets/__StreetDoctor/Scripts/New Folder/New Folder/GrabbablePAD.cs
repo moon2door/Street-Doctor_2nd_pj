@@ -1,22 +1,25 @@
-ï»¿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class GrabbableObject : MonoBehaviour
+public class GrabbablePAD : MonoBehaviour
 {
     [HideInInspector] public bool isGrabbed = false;
 
-    [Header("ë¦´ë¦¬ì¦ˆ ì‹œ ë¶™ì„ ë¶€ëª¨")]
+    [Header("¸±¸®Áî ½Ã ºÙÀ» ºÎ¸ğ")]
     public Transform returnParent;
 
-    [Header("ì˜¤ë¸Œì íŠ¸ ê³ ìœ  ID")]
+    [Header("¿ÀºêÁ§Æ® °íÀ¯ ID")]
     public int objectID = 0;
 
-    [Header("ë¨¸í…Œë¦¬ì–¼ ìƒ‰ì„ ë°”ê¿€ ì˜¤ë¸Œì íŠ¸")]
+    [Header("¸ÓÅ×¸®¾ó »öÀ» ¹Ù²Ü ¿ÀºêÁ§Æ®")]
     public GameObject targetObject;
 
     private Collider myCollider;
-
     private Material targetMaterial;
     private bool materialChanged = false;
+
+    private Transform handTransform; // ¼Õ TransformÀ» ÀúÀå
 
     private void Awake()
     {
@@ -28,7 +31,7 @@ public class GrabbableObject : MonoBehaviour
             if (rend != null)
             {
                 targetMaterial = rend.material;
-                // ì²˜ìŒì—ëŠ” ë¶‰ì€ìƒ‰ ë°˜íˆ¬ëª…ìœ¼ë¡œ ì´ˆê¸°í™”
+                // Ã³À½¿¡´Â ºÓÀº»ö ¹İÅõ¸íÀ¸·Î ÃÊ±âÈ­
                 targetMaterial.color = new Color(1f, 0f, 0f, 0.35f);
             }
         }
@@ -36,6 +39,14 @@ public class GrabbableObject : MonoBehaviour
 
     private void Update()
     {
+        // ¼ÕÀ» µû¶ó ¿òÁ÷ÀÓ
+        if (isGrabbed && handTransform != null)
+        {
+            transform.position = handTransform.position;
+            transform.rotation = handTransform.rotation;
+        }
+
+        // ÆĞµåÀÇ À§Ä¡°¡ Á¤´ä À§Ä¡¿¡ ¸Â¾Ò´ÂÁö È®ÀÎ
         if (!isGrabbed || targetObject == null || myCollider == null || targetMaterial == null) return;
 
         CodeID[] targets = GameObject.FindObjectsOfType<CodeID>();
@@ -58,7 +69,7 @@ public class GrabbableObject : MonoBehaviour
         {
             if (!materialChanged)
             {
-                targetMaterial.color = new Color(0f, 1f, 0f, 0.35f); // ì´ˆë¡ìƒ‰ ë°˜íˆ¬ëª…
+                targetMaterial.color = new Color(0f, 1f, 0f, 0.35f); // ÃÊ·Ï»ö ¹İÅõ¸í
                 materialChanged = true;
             }
         }
@@ -66,23 +77,22 @@ public class GrabbableObject : MonoBehaviour
         {
             if (materialChanged)
             {
-                targetMaterial.color = new Color(1f, 0f, 0f, 0.35f); // ë¹¨ê°„ìƒ‰ ë°˜íˆ¬ëª…
+                targetMaterial.color = new Color(1f, 0f, 0f, 0.35f); // »¡°£»ö ¹İÅõ¸í
                 materialChanged = false;
             }
         }
     }
 
-    public void Grab(Transform handTransform)
+    public void Grab(Transform hand)
     {
         isGrabbed = true;
-        transform.SetParent(handTransform);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
+        handTransform = hand;
     }
 
     public void Release()
     {
         isGrabbed = false;
+        handTransform = null;
 
         CodeID[] targets = GameObject.FindObjectsOfType<CodeID>();
         foreach (var target in targets)

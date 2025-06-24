@@ -10,6 +10,7 @@ public class ForwardRayLine : MonoBehaviour
     public LeftHandFistDetector fistDetector;
 
     private LineRenderer lineRenderer;
+    private GameObject currentOutlined;
 
     void Start()
     {
@@ -19,7 +20,15 @@ public class ForwardRayLine : MonoBehaviour
 
     void Update()
     {
-        if (!lineRenderer.enabled) return; // ✅ LineRenderer 꺼져 있으면 아무것도 하지 않음
+        if (!lineRenderer.enabled)
+        {
+            if (currentOutlined != null)
+            {
+                ToggleOutline(currentOutlined, false);
+                currentOutlined = null;
+            }
+            return;
+        }
 
         if (fistDetector == null)
         {
@@ -31,11 +40,36 @@ public class ForwardRayLine : MonoBehaviour
 
         if (CheckRaycastHit(out RaycastHit hit))
         {
-            if (fistDetector.IsLeftHandFist())
+            GameObject hitObj = hit.collider.gameObject;
+
+            if (currentOutlined != hitObj)
             {
-                Debug.Log("🔍 라인에 오브젝트 감지됨 + 왼손 주먹");
+                // 이전 오브젝트의 아웃라인 끄기
+                if (currentOutlined != null)
+                    ToggleOutline(currentOutlined, false);
+
+                // 새 오브젝트의 아웃라인 켜기
+                ToggleOutline(hitObj, true);
+                currentOutlined = hitObj;
             }
         }
+        else
+        {
+            // 레이가 아무것도 안 맞았을 때 현재 아웃라인 제거
+            if (currentOutlined != null)
+            {
+                ToggleOutline(currentOutlined, false);
+                currentOutlined = null;
+            }
+        }
+    }
+
+
+    void ToggleOutline(GameObject obj, bool state)
+    {
+        var outline = obj.GetComponent<Outline>();
+        if (outline != null)
+            outline.enabled = state;
     }
 
     void UpdateLine()
