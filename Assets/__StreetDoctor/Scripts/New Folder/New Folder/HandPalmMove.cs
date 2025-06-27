@@ -42,8 +42,6 @@ public class HandPalmMove : MonoBehaviour
 
         Vector3 moveDir = Vector3.zero;
 
-        Debug.Log("왼손 : " + upDotL + "오른손 : " + upDotR);
-
         if (upDotL < -0.5f && upDotR < -0.5f)
         {
             // 양 손목이 하늘을 향함 → 뒤로
@@ -73,7 +71,7 @@ public class HandPalmMove : MonoBehaviour
         float indexR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Index);
         float middleR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
 
-        Debug.Log($"[왼] 엄지:{thumbL:F2}, 검지:{indexL:F2}, 중지:{middleL:F2} || [오] 엄지:{thumbR:F2}, 검지:{indexR:F2}, 중지:{middleR:F2}");
+        //Debug.Log($"[왼] 엄지:{thumbL:F2}, 검지:{indexL:F2}, 중지:{middleL:F2} || [오] 엄지:{thumbR:F2}, 검지:{indexR:F2}, 중지:{middleR:F2}");
 
         return thumbL > threshold && indexL > threshold && middleL > threshold &&
                thumbR > threshold && indexR > threshold && middleR > threshold;

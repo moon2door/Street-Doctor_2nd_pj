@@ -14,7 +14,7 @@ public class Controller : MonoBehaviour
     {
         Ray ray = new Ray(rightHand.transform.position, rightHand.transform.forward);
 
-        Debug.DrawRay(ray.origin, ray.direction * 10f, Color.red);
+        //Debug.DrawRay(ray.origin, ray.direction * 10f, Color.red);
 
         if (Physics.Raycast(ray, out hit, 10f))
         {

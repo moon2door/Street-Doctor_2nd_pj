@@ -14,7 +14,7 @@ public class HandGrabber : MonoBehaviour
     public Transform rightHandTransform;
     public Transform leftHandTransform;
 
-    public float grabThreshold = 0.9f;
+    public float grabThreshold = 0.5f;
 
     private readonly string[] fingerPrefixes = { "ThumbTip", "IndexTip" };
 
@@ -59,10 +59,10 @@ public class HandGrabber : MonoBehaviour
 
     void HandleGrab(OVRHand ovrHand, Transform handTransform, ref GrabbableObject target)
     {
-        if (ovrHand == null || handTransform == null) return;
-
         float thumb = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
         float index = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Index);
+
+        if (ovrHand == null || handTransform == null) return;
 
         bool isPinching = thumb > grabThreshold && index > grabThreshold;
         bool isGrabbingObject = target != null && target.transform.parent == handTransform;
@@ -77,8 +77,8 @@ public class HandGrabber : MonoBehaviour
         // 고정 위치
         if (isGrabbingObject)
         {
-            target.transform.localPosition = Vector3.zero;
-            target.transform.localRotation = Quaternion.identity;
+            target.transform.localPosition = target.grabOffset;
+            target.transform.localRotation = target.grabRotationOffset;
         }
 
         // Release

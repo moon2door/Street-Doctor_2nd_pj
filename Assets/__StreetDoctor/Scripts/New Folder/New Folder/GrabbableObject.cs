@@ -1,5 +1,22 @@
 ﻿using UnityEngine;
 
+public static class TransformExtensions
+{
+    public static void SetParentKeepWorldScale(this Transform child, Transform newParent)
+    {
+        Vector3 worldScale = child.lossyScale;
+
+        child.SetParent(newParent);
+
+        Vector3 parentScale = newParent == null ? Vector3.one : newParent.lossyScale;
+        child.localScale = new Vector3(
+            worldScale.x / (parentScale.x == 0 ? 1 : parentScale.x),
+            worldScale.y / (parentScale.y == 0 ? 1 : parentScale.y),
+            worldScale.z / (parentScale.z == 0 ? 1 : parentScale.z)
+        );
+    }
+}
+
 public class GrabbableObject : MonoBehaviour
 {
     [HideInInspector] public bool isGrabbed = false;
@@ -13,8 +30,13 @@ public class GrabbableObject : MonoBehaviour
     [Header("머테리얼 색을 바꿀 오브젝트")]
     public GameObject targetObject;
 
-    private Collider myCollider;
+    [Header("손에 붙을 오프셋 (옵션)")]
+    public Vector3 grabOffset = Vector3.zero;
+    public Vector3 grabRotationOffsetEuler = Vector3.zero;
 
+    public Quaternion grabRotationOffset => Quaternion.Euler(grabRotationOffsetEuler);
+
+    private Collider myCollider;
     private Material targetMaterial;
     private bool materialChanged = false;
 
@@ -75,9 +97,9 @@ public class GrabbableObject : MonoBehaviour
     public void Grab(Transform handTransform)
     {
         isGrabbed = true;
-        transform.SetParent(handTransform);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
+        transform.SetParentKeepWorldScale(handTransform);
+        transform.localPosition = grabOffset;
+        transform.localRotation = grabRotationOffset;
     }
 
     public void Release()
@@ -92,7 +114,7 @@ public class GrabbableObject : MonoBehaviour
                 Collider targetCol = target.GetComponent<Collider>();
                 if (targetCol != null && myCollider != null && myCollider.bounds.Intersects(targetCol.bounds))
                 {
-                    transform.SetParent(target.transform);
+                    transform.SetParentKeepWorldScale(target.transform);
                     transform.localPosition = Vector3.zero;
                     transform.localRotation = Quaternion.identity;
                     return;
@@ -102,13 +124,13 @@ public class GrabbableObject : MonoBehaviour
 
         if (returnParent != null)
         {
-            transform.SetParent(returnParent);
+            transform.SetParentKeepWorldScale(returnParent);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
         }
         else
         {
-            transform.SetParent(null);
+            transform.SetParentKeepWorldScale(null);
         }
     }
 }
