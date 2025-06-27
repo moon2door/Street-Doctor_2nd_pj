@@ -14,7 +14,6 @@ public class HandPalmMove : MonoBehaviour
     [Header("설정")]
     public float moveSpeed = 1.5f;
     public float palmMoveThreshold = 0.5f;
-    public float handDistanceThreshold = 0.2f;
 
     private CharacterController characterController;
 
@@ -26,26 +25,16 @@ public class HandPalmMove : MonoBehaviour
             cameraRig = Camera.main.transform;
 
         leftHand = GameObject.Find("LeftHandAnchor").transform;
-        rightHand = GameObject.Find("RightHandAnchor").transform;
         cameraRig = GameObject.Find("CenterEyeAnchor").transform;
         ovrHand = GameObject.Find("OVRLeftHandDataSource").GetComponent<OVRHand>();
+
+        rightHand = GameObject.Find("RightHandAnchor").transform;
         ovrHandRight = GameObject.Find("OVRRightHandDataSource").GetComponent<OVRHand>();
 
     }
 
     void Update()
     {
-        if (ovrHand != null)
-        {
-            //Debug.Log($"[진단] IsTracked: {ovrHand.IsTracked}");
-            //Debug.Log($"[진단] FingerConfidence Index: {ovrHand.GetFingerConfidence(OVRHand.HandFinger.Index)}");
-
-            var skeleton = ovrHand.GetComponent<OVRSkeleton>();
-            //Debug.Log($"[진단] OVRSkeleton Bone Count: {skeleton?.Bones?.Count}");
-        }
-        // 디버그 로그 - 손 정보 상태 체크
-        //Debug.Log($"[Update] IsFistByCurl: {IsFistByCurl()}, IsFistByPinching: {IsFistByPinching()}");
-        //if (!IsFistByCurl() && !IsFistByPinching()) return;
         if (!IsFist()) return;
 
         float upDotL = Vector3.Dot(leftHand.up, Vector3.up);
@@ -63,11 +52,11 @@ public class HandPalmMove : MonoBehaviour
             // 양 손목이 바닥을 향함 → 앞으로
             moveDir = leftHand.forward;
         }
+
         moveDir.y = 0;
         characterController.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
     }
 
-    //  손 추적 진단용 로그
     bool IsFist()
     {
         float threshold = 0.3f;
@@ -81,12 +70,12 @@ public class HandPalmMove : MonoBehaviour
         float thumbR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
         float indexR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Index);
         float middleR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
-                
+
+        //Debug.Log($"[왼] 엄지:{thumbL:F2}, 검지:{indexL:F2}, 중지:{middleL:F2} || [오] 엄지:{thumbR:F2}, 검지:{indexR:F2}, 중지:{middleR:F2}");
+
         return thumbL > threshold && indexL > threshold && middleL > threshold &&
                thumbR > threshold && indexR > threshold && middleR > threshold;
     }
+
+
 }
-//bool AreHandsClose()
-//{
-//    return Vector3.Distance(leftHand.position, rightHand.position) < handDistanceThreshold;
-//}

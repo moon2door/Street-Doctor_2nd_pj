@@ -21,44 +21,22 @@ public class ClickButton : MonoBehaviour
     public GameObject BtnAgeKOBJ;
     public Material secondMaterial;
 
-    [Header("자동문 관련")]
-    public Transform doorLeft;
-    public Transform doorRight;
-    public float doorOpenDistance = 2.5f;
-    public float doorOpenSpeed = 2.0f;
-    private bool isDoorOpen = false;
-    private bool doorLock = false;
-    private float doorOpenDuration = 30f; // 30초
-
     void Start()
     {
         originalPosition = transform.localPosition;
 
         myRenderer = GetComponent<Renderer>();
-        //if (myRenderer != null)
-        //{
-        //    defaultMats = myRenderer.materials;
-
-        //    // 시작 시 element 1을 완전히 제거 (핑크 방지)
-        //    if (defaultMats.Length >= 2)
-        //    {
-        //        Material[] mats = new Material[1];
-        //        mats[0] = defaultMats[0]; // 메인 머티리얼만 유지
-        //        myRenderer.materials = mats;
-        //    }
-        //}
-        GameObject left = GameObject.Find("DoorLeft");
-        GameObject right = GameObject.Find("DoorRight");
-
-        if (left != null && right != null)
+        if (myRenderer != null)
         {
-            Debug.Log("문 자동 연결 성공!");
-            doorLeft = left.transform;
-            doorRight = right.transform;
-        }
-        else
-        {
-            Debug.LogWarning("자동문 오브젝트를 찾지 못했습니다. 'DoorLeft', 'DoorRight' 이름 확인하세요.");
+            defaultMats = myRenderer.materials;
+
+            // 시작 시 element 1을 완전히 제거 (핑크 방지)
+            if (defaultMats.Length >= 2)
+            {
+                Material[] mats = new Material[1];
+                mats[0] = defaultMats[0]; // 메인 머티리얼만 유지
+                myRenderer.materials = mats;
+            }
         }
     }
 
@@ -108,22 +86,6 @@ public class ClickButton : MonoBehaviour
                 default:
                     Debug.Log($"{gameObject.name} 버튼이 눌림!");
                     break;
-
-                case "BtnDoor":                   
-                    if (!isDoorOpen && !doorLock)
-                    {
-                        Debug.Log("문 열기 시도");
-                        StartCoroutine(OpenAutoDoor());
-                        isDoorOpen = true;
-                        doorLock = true;
-                        StartCoroutine(AutoCloseDoorAfterDelay());
-                    }
-                    else
-                    {
-                            //StartCoroutine(CloseAutoDoor());
-                            //isDoorOpen = false;                       
-                    }
-                    break;
             }
         }
     }
@@ -172,47 +134,8 @@ public class ClickButton : MonoBehaviour
             transform.localPosition = Vector3.Lerp(downPos, originalPosition, t / pressDuration);
             yield return null;
         }
+
         transform.localPosition = originalPosition;
         isPressed = false;
-    }
-    IEnumerator OpenAutoDoor()
-    {        
-        Vector3 leftTarget = doorLeft.position + doorLeft.right * doorOpenDistance;
-        Vector3 rightTarget = doorRight.position + doorRight.right * -doorOpenDistance;
-        float t = 0;
-        Vector3 leftStart = doorLeft.position;
-        Vector3 rightStart = doorRight.position;       
-
-        while (t < 1f)
-        {
-            t += Time.deltaTime * doorOpenSpeed;
-            doorLeft.position = Vector3.Lerp(leftStart, leftTarget, t);
-            doorRight.position = Vector3.Lerp(rightStart, rightTarget, t);
-            yield return null;
-        }
-    }
-    IEnumerator AutoCloseDoorAfterDelay()
-    {
-        yield return new WaitForSeconds(doorOpenDuration);
-        Debug.Log("자동으로 문 닫기 시도");
-        StartCoroutine(CloseAutoDoor());
-        isDoorOpen = false;
-        doorLock = false;
-    }
-    IEnumerator CloseAutoDoor()
-    {
-        Vector3 leftStart = doorLeft.position;
-        Vector3 rightStart = doorRight.position;
-        Vector3 leftTarget = doorLeft.position + doorLeft.right * -doorOpenDistance;
-        Vector3 rightTarget = doorRight.position + doorRight.right * doorOpenDistance;
-
-        float t = 0;
-        while (t < 1f)
-        {
-            t += Time.deltaTime * doorOpenSpeed;
-            doorLeft.position = Vector3.Lerp(leftStart, leftTarget, t);
-            doorRight.position = Vector3.Lerp(rightStart, rightTarget, t);
-            yield return null;
-        }
     }
 }

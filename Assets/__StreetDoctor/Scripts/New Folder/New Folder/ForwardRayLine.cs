@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(LineRenderer))]
 public class ForwardRayLine : MonoBehaviour
 {
     public float lineLength = 2f;
@@ -9,83 +8,85 @@ public class ForwardRayLine : MonoBehaviour
     [Header("참조 스크립트")]
     public LeftHandFistDetector fistDetector;
 
-    private LineRenderer lineRenderer;
     private GameObject currentOutlined;
-
-    void Start()
-    {
-        lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.positionCount = 2;
-    }
+    private float hoverTime = 0f;
+    private bool blinking = false;
+    private float blinkTimer = 0f;
+    private float blinkInterval = 0.5f;
 
     void Update()
     {
-        if (!lineRenderer.enabled)
-        {
-            if (currentOutlined != null)
-            {
-                ToggleOutline(currentOutlined, false);
-                currentOutlined = null;
-            }
-            return;
-        }
-
         if (fistDetector == null)
         {
             fistDetector = FindObjectOfType<LeftHandFistDetector>();
             if (fistDetector == null) return;
         }
 
-        UpdateLine();
+        Vector3 start = transform.position + offset;
+        Vector3 direction = transform.forward;
+        Debug.DrawRay(start, direction * lineLength, Color.red);
 
-        if (CheckRaycastHit(out RaycastHit hit))
+        if (Physics.Raycast(start, direction, out RaycastHit hit, lineLength))
         {
             GameObject hitObj = hit.collider.gameObject;
 
             if (currentOutlined != hitObj)
             {
-                // 이전 오브젝트의 아웃라인 끄기
-                if (currentOutlined != null)
-                    ToggleOutline(currentOutlined, false);
+                StopBlinking(); // 기존 아웃라인 초기화
+                ToggleOutline(currentOutlined, false);
 
-                // 새 오브젝트의 아웃라인 켜기
-                ToggleOutline(hitObj, true);
                 currentOutlined = hitObj;
+                ToggleOutline(currentOutlined, true);
+                hoverTime = 0f;
+            }
+            else
+            {
+                hoverTime += Time.deltaTime;
+
+                if (hoverTime >= 2f && !blinking)
+                {
+                    blinking = true;
+                    blinkTimer = 0f;
+                }
+
+                if (blinking)
+                {
+                    blinkTimer += Time.deltaTime;
+                    if (blinkTimer >= blinkInterval)
+                    {
+                        blinkTimer = 0f;
+                        ToggleOutline(currentOutlined, !IsOutlineEnabled(currentOutlined));
+                    }
+                }
             }
         }
         else
         {
-            // 레이가 아무것도 안 맞았을 때 현재 아웃라인 제거
-            if (currentOutlined != null)
-            {
-                ToggleOutline(currentOutlined, false);
-                currentOutlined = null;
-            }
+            StopBlinking();
+            ToggleOutline(currentOutlined, false);
+            currentOutlined = null;
         }
     }
 
+    void StopBlinking()
+    {
+        blinking = false;
+        hoverTime = 0f;
+        blinkTimer = 0f;
+    }
 
     void ToggleOutline(GameObject obj, bool state)
     {
+        if (obj == null) return;
         var outline = obj.GetComponent<Outline>();
         if (outline != null)
             outline.enabled = state;
     }
 
-    void UpdateLine()
+    bool IsOutlineEnabled(GameObject obj)
     {
-        Vector3 startPos = transform.position + offset;
-        Vector3 endPos = startPos + transform.forward * lineLength;
-
-        lineRenderer.SetPosition(0, startPos);
-        lineRenderer.SetPosition(1, endPos);
-    }
-
-    bool CheckRaycastHit(out RaycastHit hitInfo)
-    {
-        Vector3 start = transform.position + offset;
-        Vector3 direction = transform.forward;
-
-        return Physics.Raycast(start, direction, out hitInfo, lineLength);
+        if (obj == null) return false;
+        var outline = obj.GetComponent<Outline>();
+        return outline != null && outline.enabled;
     }
 }
