@@ -584,7 +584,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2.28
-  m_Radius: 0.44
+  m_Radius: 0.35
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -652,6 +652,7 @@ MonoBehaviour:
   ovrHandRight: {fileID: 0}
   moveSpeed: 1.5
   palmMoveThreshold: 0.5
+  handDistanceThreshold: 0.2
 --- !u!114 &505879336693184408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,7 +702,7 @@ MonoBehaviour:
   leftFingers: []
   rightHandTransform: {fileID: 0}
   leftHandTransform: {fileID: 0}
-  grabThreshold: 0.5
+  grabThreshold: 0.9
 --- !u!1 &2180839106788026648
 GameObject:
   m_ObjectHideFlags: 0

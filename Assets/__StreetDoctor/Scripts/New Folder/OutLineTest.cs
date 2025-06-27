@@ -14,7 +14,7 @@ public class OutLineTest : MonoBehaviour
 
     public void outline(string _string)
     {
-        if(_string == gameObject.name)
+        if (_string == gameObject.name)
         {
             myOL.enabled = true;
         }
@@ -24,3 +24,4 @@ public class OutLineTest : MonoBehaviour
         }
     }
 }
+

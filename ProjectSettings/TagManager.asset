@@ -10,6 +10,11 @@ TagManager:
   - CPR_Mouth
   - Hand
   - Grabbable
+  - AutoDoor
+  - Ground
+  - Basket
+  - BasketZone
+  - GroundZone
   layers:
   - Default
   - TransparentFX
@@ -19,7 +24,7 @@ TagManager:
   - UI
   - Map
   - 
-  - 
+  - Outline
   - 
   - 
   - 
