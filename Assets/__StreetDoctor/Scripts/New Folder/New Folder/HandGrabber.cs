@@ -24,32 +24,50 @@ public class HandGrabber : MonoBehaviour
         rightOVRHand = GameObject.Find("OVRRightHandDataSource").GetComponent<OVRHand>();
         rightHandTransform = GameObject.Find("XRHand_IndexTipR").transform;
 
-        rightFingers = new GameObject[fingerPrefixes.Length];
-        for (int i = 0; i < fingerPrefixes.Length; i++)
+        if (rightFingers == null || rightFingers.Length == 0)
         {
-            string name = $"XRHand_{fingerPrefixes[i]}R";
-            rightFingers[i] = GameObject.Find(name);
-            if (rightFingers[i] != null)
-                AttachFingerTrigger(rightFingers[i], isLeft: false);
-            else
-                Debug.LogWarning($"❌ 오른손 손가락 오브젝트 없음: {name}");
+            rightFingers = new GameObject[fingerPrefixes.Length];
+            for (int i = 0; i < fingerPrefixes.Length; i++)
+            {
+                string name = $"XRHand_{fingerPrefixes[i]}R";
+                rightFingers[i] = GameObject.Find(name);
+                if (rightFingers[i] == null)
+                    Debug.LogWarning($"❌ 오른손 손가락 오브젝트 없음: {name}");
+            }
+        }
+
+        // → null이든 아니든 무조건 AttachFingerTrigger 실행
+        foreach (var finger in rightFingers)
+        {
+            if (finger != null)
+                AttachFingerTrigger(finger, isLeft: false);
         }
 
         // 왼손
         leftOVRHand = GameObject.Find("OVRLeftHandDataSource").GetComponent<OVRHand>();
         leftHandTransform = GameObject.Find("XRHand_IndexTipL").transform;
 
-        leftFingers = new GameObject[fingerPrefixes.Length];
-        for (int i = 0; i < fingerPrefixes.Length; i++)
+        if (leftFingers == null || leftFingers.Length == 0)
         {
-            string name = $"XRHand_{fingerPrefixes[i]}L";
-            leftFingers[i] = GameObject.Find(name);
-            if (leftFingers[i] != null)
-                AttachFingerTrigger(leftFingers[i], isLeft: true);
-            else
-                Debug.LogWarning($"❌ 왼손 손가락 오브젝트 없음: {name}");
+            leftFingers = new GameObject[fingerPrefixes.Length];
+            for (int i = 0; i < fingerPrefixes.Length; i++)
+            {
+                string name = $"XRHand_{fingerPrefixes[i]}L";
+                leftFingers[i] = GameObject.Find(name);
+                if (leftFingers[i] == null)
+                    Debug.LogWarning($"❌ 왼손 손가락 오브젝트 없음: {name}");
+            }
+        }
+
+        // → null이든 아니든 무조건 AttachFingerTrigger 실행
+        foreach (var finger in leftFingers)
+        {
+            if (finger != null)
+                AttachFingerTrigger(finger, isLeft: true);
         }
     }
+
+
 
     void Update()
     {
@@ -94,8 +112,18 @@ public class HandGrabber : MonoBehaviour
 
     void AttachFingerTrigger(GameObject fingerObj, bool isLeft)
     {
-        FingerTrigger trigger = fingerObj.AddComponent<FingerTrigger>();
-        trigger.Setup(this, isLeft);
+        Debug.Log($"👉 {fingerObj.name} 에 FingerTrigger 붙이는 중");
+
+        if (fingerObj.GetComponent<FingerTrigger>() == null)
+        {
+            FingerTrigger trigger = fingerObj.AddComponent<FingerTrigger>();
+            Debug.Log($"✅ FingerTrigger 추가 완료: {fingerObj.name}");
+            trigger.Setup(this, isLeft);
+        }
+        else
+        {
+            Debug.Log($"⚠️ 이미 FingerTrigger 있음: {fingerObj.name}");
+        }
     }
 
     public void SetTarget(GrabbableObject obj, bool isLeft)

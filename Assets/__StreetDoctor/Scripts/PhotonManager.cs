@@ -12,13 +12,13 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        if (FindObjectsOfType<PhotonManager>().Length > 1)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        //if (FindObjectsOfType<PhotonManager>().Length > 1)
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
 
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         PhotonNetwork.NickName = "Guest";
         PhotonNetwork.GameVersion = "1.0";
         PhotonNetwork.AutomaticallySyncScene = true;

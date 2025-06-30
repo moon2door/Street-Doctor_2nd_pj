@@ -5,10 +5,9 @@ public static class TransformExtensions
     public static void SetParentKeepWorldScale(this Transform child, Transform newParent)
     {
         Vector3 worldScale = child.lossyScale;
-
         child.SetParent(newParent);
-
         Vector3 parentScale = newParent == null ? Vector3.one : newParent.lossyScale;
+
         child.localScale = new Vector3(
             worldScale.x / (parentScale.x == 0 ? 1 : parentScale.x),
             worldScale.y / (parentScale.y == 0 ? 1 : parentScale.y),
@@ -23,6 +22,7 @@ public class GrabbableObject : MonoBehaviour
 
     [Header("릴리즈 시 붙을 부모")]
     public Transform returnParent;
+    private Vector3 savedPosition;
 
     [Header("오브젝트 고유 ID")]
     public int objectID = 0;
@@ -43,6 +43,7 @@ public class GrabbableObject : MonoBehaviour
     private void Awake()
     {
         myCollider = GetComponent<Collider>();
+        savedPosition = transform.position;
 
         if (targetObject != null)
         {
@@ -50,8 +51,7 @@ public class GrabbableObject : MonoBehaviour
             if (rend != null)
             {
                 targetMaterial = rend.material;
-                // 처음에는 붉은색 반투명으로 초기화
-                targetMaterial.color = new Color(1f, 0f, 0f, 0.35f);
+                targetMaterial.color = new Color(1f, 0f, 0f, 0.35f); // 빨간색 반투명
             }
         }
     }
@@ -131,6 +131,17 @@ public class GrabbableObject : MonoBehaviour
         else
         {
             transform.SetParentKeepWorldScale(null);
+        }
+    }
+
+    public void ResetState()
+    {
+        savedPosition = transform.position;
+        materialChanged = false;
+
+        if (targetMaterial != null)
+        {
+            targetMaterial.color = new Color(1f, 0f, 0f, 0.35f); // 초기 상태로 되돌림
         }
     }
 }

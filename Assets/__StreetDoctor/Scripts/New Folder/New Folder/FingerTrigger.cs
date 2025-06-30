@@ -13,6 +13,8 @@ public class FingerTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        //Debug.Log("손가락이 닿은 물체: " + other.name);
+
         if (other.CompareTag("Grabbable"))
         {
             GrabbableObject obj = other.GetComponent<GrabbableObject>();

@@ -126,7 +126,6 @@ MonoBehaviour:
   m_Name: ARPlaneFeature Standalone
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Plane Detection'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-plane
@@ -259,6 +258,12 @@ MonoBehaviour:
   - {fileID: -1725740724591937067}
   - {fileID: -4534655395629014512}
   - {fileID: -8774543027540712808}
+  - {fileID: -3689590245692223355}
+  - {fileID: -6469663985757063378}
+  - {fileID: 7692070241308409896}
+  - {fileID: 1431870513255417310}
+  - {fileID: 7166856478829575022}
+  - {fileID: -582965967248453594}
   - {fileID: 5893495819117833248}
   - {fileID: 265637636524939529}
   - {fileID: 1201217428230197648}
@@ -292,7 +297,6 @@ MonoBehaviour:
   m_Name: ARCameraFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Camera (Passthrough)'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-camera
@@ -416,7 +420,6 @@ MonoBehaviour:
   m_Name: ARCameraFeature Standalone
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Camera (Passthrough)'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-camera
@@ -447,6 +450,12 @@ MonoBehaviour:
   - {fileID: 235233781920490340}
   - {fileID: 674268585172810122}
   - {fileID: -8935755461389624748}
+  - {fileID: 1627145784394091269}
+  - {fileID: -4256994010158089260}
+  - {fileID: -8181617519832836359}
+  - {fileID: -999165709170831390}
+  - {fileID: 5650606837172598135}
+  - {fileID: 6106813798032818758}
   - {fileID: 2265415776238001674}
   - {fileID: 349968862475295629}
   - {fileID: -57832008140340940}
@@ -480,7 +489,6 @@ MonoBehaviour:
   m_Name: ARAnchorFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Anchors'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-anchor
@@ -585,7 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4710975c7840e7d499bbb3757c22b0a5, type: 3}
   m_Name: MetaXRSubsampledLayout Android
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: Meta XR Subsampled Layout
   version: 0.0.1
   featureIdInternal: com.meta.openxr.feature.subsampledLayout
@@ -605,7 +613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feeef8d85de8db242bdda70cc7ff5acd, type: 3}
   m_Name: OculusTouchControllerProfile Android
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: Oculus Touch Controller Profile
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.input.oculustouch
@@ -626,7 +634,6 @@ MonoBehaviour:
   m_Name: ARRaycastFeature Standalone
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Raycasts'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-raycast
@@ -647,7 +654,6 @@ MonoBehaviour:
   m_Name: DisplayUtilitiesFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: Display Utilities'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.meta-display-utilities
@@ -877,7 +883,6 @@ MonoBehaviour:
   m_Name: ARRaycastFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Raycasts'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-raycast
@@ -898,7 +903,6 @@ MonoBehaviour:
   m_Name: ARAnchorFeature Standalone
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Anchors'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-anchor
@@ -1123,7 +1127,6 @@ MonoBehaviour:
   m_Name: ARSessionFeature Standalone
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Session'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-session
@@ -1165,7 +1168,6 @@ MonoBehaviour:
   m_Name: DisplayUtilitiesFeature Standalone
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: Display Utilities'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.meta-display-utilities
@@ -1299,7 +1301,6 @@ MonoBehaviour:
   m_Name: ARSessionFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Session'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-session
@@ -1320,7 +1321,6 @@ MonoBehaviour:
   m_Name: ARPlaneFeature Android
   m_EditorClassIdentifier: 
   m_enabled: 0
-  <failedInitialization>k__BackingField: 0
   nameUi: 'Meta Quest: AR Plane Detection'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-plane
