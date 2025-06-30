@@ -44,7 +44,7 @@ public class CubeManager : MonoBehaviour
         SpawnCube();
     }
 
-    public void OnCubeEnteredBasket(GrabbableObject cube)
+    public void OnCubeEnteredBasket(TutoGrabbableObject cube)
     {
         if (isCompleted) return;
 
@@ -60,7 +60,7 @@ public class CubeManager : MonoBehaviour
             // 마지막 큐브 위치 초기화 시도
             if (cube != null)
             {
-                GrabbableObject go = cube.GetComponent<GrabbableObject>();
+                TutoGrabbableObject go = cube.GetComponent<TutoGrabbableObject>();
                 if (go != null) go.ResetState(); // 위치 리셋
             }
             //  바구니는 조금 뒤에 꺼지게 딜레이 처리
@@ -84,7 +84,7 @@ public class CubeManager : MonoBehaviour
             rb.isKinematic = true;
         }
 
-        GrabbableObject grabbable = cube.GetComponent<GrabbableObject>();
+        TutoGrabbableObject grabbable = cube.GetComponent<TutoGrabbableObject>();
         if (grabbable != null)
         {
             grabbable.ResetState();

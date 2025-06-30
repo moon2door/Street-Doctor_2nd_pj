@@ -79,11 +79,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a2983e1bcaeb8d64f8849033c7caaf9f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5178720833637671035}
+      addedObject: {fileID: 1080010692954359379}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a2983e1bcaeb8d64f8849033c7caaf9f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1080010692954359379}
+      addedObject: {fileID: 837934433074196466}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a2983e1bcaeb8d64f8849033c7caaf9f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2167397220796761856}
   m_SourcePrefab: {fileID: 100100000, guid: a2983e1bcaeb8d64f8849033c7caaf9f, type: 3}
 --- !u!1 &8367250557740933460 stripped
 GameObject:
@@ -109,20 +113,6 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!114 &5178720833637671035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8367250557740933460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa76a8ac6ee8ce748b2d891441041248, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGrabbed: 0
-  returnParent: {fileID: 0}
 --- !u!65 &1080010692954359379
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -144,3 +134,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.099999994, y: 0.099999994, z: 0.099999994}
   m_Center: {x: 0, y: -0.0000000055879354, z: 0}
+--- !u!114 &837934433074196466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8367250557740933460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ecd8835e2a0f2341b3cc784d58deb12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGrabbed: 0
+  returnParent: {fileID: 0}
+--- !u!114 &2167397220796761856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8367250557740933460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c64a0a937943e7479336a21f6d75697, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cube: {fileID: 0}
+  spawnPoint: {fileID: 0}
+  basket: {fileID: 0}
+  goal: 3
