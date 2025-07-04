@@ -26,7 +26,6 @@ public class CPRTimer : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         myTR = GetComponent<CPRTraningStart>();
 
-        cprMain = GameObject.Find("XRHand_PalmR").GetComponent<CPRMain>();
         timerSecF1 = timerSec;
     }
 
