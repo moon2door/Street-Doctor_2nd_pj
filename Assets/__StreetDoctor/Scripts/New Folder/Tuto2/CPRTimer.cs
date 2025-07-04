@@ -72,9 +72,9 @@ public class CPRTimer : MonoBehaviour
         if (timerSec <= 0.01f)
         {
             timerSec = timerSecF1;
-            cprMain.cprCount = 0;
         }
 
+        cprMain.cprCount = 0;
         isTimerRunning = true;
     }
 

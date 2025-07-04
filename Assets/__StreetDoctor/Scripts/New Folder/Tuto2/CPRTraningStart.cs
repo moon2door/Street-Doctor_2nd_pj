@@ -49,6 +49,10 @@ public class CPRTraningStart : MonoBehaviour
     public GameObject cprUI;
     private CPRTimer cprTimer;
 
+    [Header("옷")]
+    public GameObject clothOBJ;
+    public GameObject clothCol;
+
     private void Start()
     {
         cprTimer = GetComponent<CPRTimer>();
@@ -153,6 +157,9 @@ public class CPRTraningStart : MonoBehaviour
             case 25:
                 OBJ_ActiveSelf(cprUI);
                 cprTimer.TimerStart();
+                break;
+            case 29:
+                OBJ_ActiveSelf(clothCol);
                 break;
         }
     }
