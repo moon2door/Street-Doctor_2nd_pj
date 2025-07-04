@@ -9,7 +9,10 @@ public class CubeManager : MonoBehaviour
     public GameObject cube;
     public Transform spawnPoint;
     public GameObject basket;
-    
+
+    [Header("공용 효과음")]
+    public AudioClip basketSFX;
+
     [Header("목표 설정")]
     public int goal = 3;
 
@@ -18,60 +21,105 @@ public class CubeManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-        Instance = this;
-    }
-
+        if (Instance == null) Instance = this;
+        else Destroy(this.gameObject);
+    }    
     public void Start()
     {
-        if (cube == null)
-            cube = GameObject.Find("Cube");
-
-        if (spawnPoint == null)
-            spawnPoint = GameObject.Find("Obj _ Transform")?.transform;
-
-        if (basket == null)
-            basket = GameObject.Find("Basket");
+        
     }
     public void StartCubeTask()
     {
-        basket.SetActive(true);
+        if (spawnPoint == null)
+        {
+            GameObject sp = GameObject.Find("Obj _ Transform");
+            if (sp != null)
+            {
+                spawnPoint = sp.transform;
+                Debug.Log("✅ spawnPoint 자동 연결됨");
+            }
+            else
+            {
+                Debug.LogError("❌ spawnPoint(Obj _ Transform)를 찾을 수 없습니다.");
+                return;
+            }
+        }
+
+        if (cube == null && spawnPoint != null)
+        {
+            Transform child = spawnPoint.Find("Cube");
+            if (child != null)
+            {
+                cube = child.gameObject;
+                Debug.Log("✅ Cube 자동 연결됨");
+            }
+            else
+            {
+                Debug.LogError("❌ spawnPoint 하위에 Cube 오브젝트가 없습니다.");
+                return;
+            }
+        }
+
+        if (basket == null)
+        {
+            GameObject b = GameObject.Find("Basket");
+            if (b != null)
+            {
+                basket = b;
+                Debug.Log("✅ Basket 자동 연결됨");
+            }
+            else
+            {
+                Debug.LogError("❌ Basket 오브젝트를 찾을 수 없습니다.");
+                return;
+            }
+        }
+
+        // 오브젝트 활성화
+        cube.SetActive(true);
         spawnPoint.gameObject.SetActive(true);
-        SpawnCube();
+        basket.SetActive(true);
+
+        // 튜토리얼 전용 설정
+        var grabbable = cube.GetComponent<GrabbableObject>();
+        if (grabbable != null) grabbable.isTutorialObject = true;
+
+        // 중력 초기화
+        Rigidbody rb = cube.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;  // 손에서 잡히기 전까진 고정
+        }
+
+        grabbable?.ResetState();
     }
 
-    public void OnCubeEnteredBasket(TutoGrabbableObject cube)
+    public void OnCubeEnteredBasket(GrabbableObject cube)
     {
         if (isCompleted) return;
 
         cubesCompleted++;
-        Debug.Log($"[CubeManager] 바구니 담김: {cube.gameObject.name}, 총 개수: {cubesCompleted}/{goal}");
-        TutorialManager.Instance.UpdateCubeUI(cubesCompleted, goal);
+        Debug.Log($"✅ 바스켓에 큐브 들어감 ({cubesCompleted}/{goal})");
+
+        TutorialManager.Instance?.UpdateCubeUI(cubesCompleted, goal);
 
         if (cubesCompleted >= goal)
         {
             isCompleted = true;
-            TutorialManager.Instance.OnCubeMissionComplete();
-
-            // 마지막 큐브 위치 초기화 시도
-            if (cube != null)
-            {
-                TutoGrabbableObject go = cube.GetComponent<TutoGrabbableObject>();
-                if (go != null) go.ResetState(); // 위치 리셋
-            }
-            //  바구니는 조금 뒤에 꺼지게 딜레이 처리
-            StartCoroutine(DisableObjectsWithDelay());
-            return;
+            TutorialManager.Instance?.OnCubeMissionComplete();
+            StartCoroutine(EndTaskDelay());
         }
-        SpawnCube();
+        else
+        {
+            StartCoroutine(ResetCubeAfterDelay());
+        }
     }
-    private void SpawnCube()
+
+    IEnumerator ResetCubeAfterDelay()
     {
-        if (cube == null || spawnPoint == null) return;
+        yield return new WaitForSeconds(0.8f);
 
         cube.transform.position = spawnPoint.position;
         cube.transform.rotation = spawnPoint.rotation;
@@ -84,22 +132,17 @@ public class CubeManager : MonoBehaviour
             rb.isKinematic = true;
         }
 
-        TutoGrabbableObject grabbable = cube.GetComponent<TutoGrabbableObject>();
-        if (grabbable != null)
-        {
-            grabbable.ResetState();
-        }
-        cube.SetActive(true);
+        cube.GetComponent<GrabbableObject>()?.ResetState();
     }
-    IEnumerator DisableObjectsWithDelay()
+
+    IEnumerator EndTaskDelay()
     {
-        yield return new WaitForSeconds(0.5f); // 큐브 리셋 시간 확보
+        yield return new WaitForSeconds(1f);
+
+        cube.SetActive(false);
         basket.SetActive(false);
         spawnPoint.gameObject.SetActive(false);
-        if (cube != null)
-        {
-            Destroy(this.gameObject);
-        }
+
+        Debug.Log(" 큐브 미션 완료");
     }
-    public bool IsCompleted => isCompleted;
 }

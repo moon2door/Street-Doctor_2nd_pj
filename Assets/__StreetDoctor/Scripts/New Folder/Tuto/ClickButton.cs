@@ -29,6 +29,7 @@ public class ClickButton : MonoBehaviour
     private bool isDoorOpen = false;
     private bool doorLock = false;
     private float doorOpenDuration = 30f; // 30초
+    public AudioClip doorOpenClip;
 
     void Start()
     {
@@ -109,20 +110,41 @@ public class ClickButton : MonoBehaviour
                     Debug.Log($"{gameObject.name} 버튼이 눌림!");
                     break;
 
-                case "BtnDoor":                   
+                // 튜토리얼
+                case "BtnDoor":
+                    if (TutorialManager.Instance != null && !TutorialManager.Instance.CanPressButton)
+                    {
+                        Debug.Log("아직 버튼을 누를 수 없습니다.");
+                        break;
+                    }
                     if (!isDoorOpen && !doorLock)
                     {
                         Debug.Log("문 열기 시도");
+                        Animator anim = GetComponent<Animator>();
+                        if (anim != null)
+                            anim.SetTrigger("Press");
+                        Renderer rend = GetComponent<Renderer>();
+                        if (rend != null)
+                        {
+                            Material mat = rend.material;
+                            Color original = mat.GetColor("_BaseColor");
+                            Color yellow = new Color(0f, 1f, 0.551f); // 밝은 노랑
+
+                            mat.SetColor("_BaseColor", yellow); 
+                            // 일정 시간 후 원래 색상 복구
+                            StartCoroutine(ResetColor(mat, original));
+                        }
+                        IEnumerator ResetColor(Material mat, Color original)
+                        {
+                            yield return new WaitForSeconds(2f); // 밝게 유지할 시간
+                            mat.SetColor("_BaseColor", original);
+                        }
                         StartCoroutine(OpenAutoDoor());
+                                                
                         isDoorOpen = true;
                         doorLock = true;
                         StartCoroutine(AutoCloseDoorAfterDelay());
-                    }
-                    else
-                    {
-                            //StartCoroutine(CloseAutoDoor());
-                            //isDoorOpen = false;                       
-                    }
+                    }                    
                     break;
             }
         }
@@ -176,7 +198,8 @@ public class ClickButton : MonoBehaviour
         isPressed = false;
     }
     IEnumerator OpenAutoDoor()
-    {        
+    {
+        AudioSource.PlayClipAtPoint(doorOpenClip, transform.position);
         Vector3 leftTarget = doorLeft.position + doorLeft.right * doorOpenDistance;
         Vector3 rightTarget = doorRight.position + doorRight.right * -doorOpenDistance;
         float t = 0;
