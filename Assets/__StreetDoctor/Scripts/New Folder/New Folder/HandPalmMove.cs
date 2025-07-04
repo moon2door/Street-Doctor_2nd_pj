@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -35,6 +37,10 @@ public class HandPalmMove : MonoBehaviour
 
     void Update()
     {
+        // 튜토리얼 진행 중 이동 잠금 확인
+        if (TutorialManager.Instance != null && !TutorialManager.Instance.IsMovementAllowed())
+            return;
+
         if (!IsFist()) return;
 
         float upDotL = Vector3.Dot(leftHand.up, Vector3.up);
@@ -56,7 +62,30 @@ public class HandPalmMove : MonoBehaviour
         moveDir.y = 0;
         characterController.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
     }
-
+    // 튜토리얼
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Trigger Zone") // 전방 도착 처리
+        {
+            TutorialManager.Instance.OnPlayerTarget();
+        }
+        else if (other.name == "ReverseStopZone") // 뒤로가기 도착 처리
+        {
+            TutorialManager.Instance.OnPlayerReverseTarget();
+        }
+        else if (other.name == "Cube Zone") // 큐브앞 도착 처리
+        {
+            TutorialManager.Instance.OnPlayerReachedCubeZone();
+        }
+        else if (other.name == "Button Zone") // 버튼 앞 도착 처리
+        {
+            TutorialManager.Instance.OnReachedButtonZone(); 
+        }
+        else if (other.name == "Door Zone") // 문앞 존 감지
+        {
+            TutorialManager.Instance.OnApproachDoor();
+        }
+    }
     bool IsFist()
     {
         float threshold = 0.3f;
@@ -75,7 +104,8 @@ public class HandPalmMove : MonoBehaviour
 
         return thumbL > threshold && indexL > threshold && middleL > threshold &&
                thumbR > threshold && indexR > threshold && middleR > threshold;
-    }
+    }    
 
+   
 
 }
