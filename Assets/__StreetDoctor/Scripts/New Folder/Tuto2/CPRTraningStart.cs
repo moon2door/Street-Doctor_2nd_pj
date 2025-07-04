@@ -30,15 +30,26 @@ public class CPRTraningStart : MonoBehaviour
 
     [Header("어깨 두드리는 손 오브젝트")]
     public GameObject shoulderHand;
+    public GameObject shoulderOBJ;
 
     [Header("휴대폰")]
     public GameObject phoneOBJ;
 
     [Header("가슴 압박하는 손 오브젝트")]
     public GameObject cprHand;
+    public GameObject cprOBJ;
 
     [Header("모든 단계 완료 후 활성화할 오브젝트")]
     public GameObject finalObject;
+
+    [Header("cpr타이머와 횟수")]
+    public GameObject cprUI;
+    private CPRTimer cprTimer;
+
+    private void Start()
+    {
+        cprTimer = GetComponent<CPRTimer>();
+    }
 
     void Update()
     {
@@ -87,14 +98,16 @@ public class CPRTraningStart : MonoBehaviour
         int currentIndex = stepIndex;
         stepIndex++;
 
-        // ✅ 스텝 조건에 따라 메서드 실행
+        // 문구가 시작하기 전 이벤트 실행
         switch (currentIndex)
         {
             case 2:
                 OBJ_ActiveSelf(shoulderHand);
+                OBJ_ActiveSelf(shoulderOBJ);
                 break;
             case 4:
                 OBJ_ActiveSelf(shoulderHand);
+                OBJ_ActiveSelf(shoulderOBJ);
                 break;
             case 5:
                 SpawnNPC();
@@ -107,9 +120,14 @@ public class CPRTraningStart : MonoBehaviour
                 break;
             case 21:
                 OBJ_ActiveSelf(cprHand);
+                OBJ_ActiveSelf(cprOBJ);
                 break;
             case 23:
                 OBJ_ActiveSelf(cprHand);
+                OBJ_ActiveSelf(cprOBJ);
+                break;
+            case 26:
+                OBJ_ActiveSelf(cprUI);
                 break;
         }
 
@@ -126,6 +144,15 @@ public class CPRTraningStart : MonoBehaviour
         }
 
         yield return new WaitForSeconds(1f);
+
+        // 문구가 끝나고 이벤트 실행
+        switch (currentIndex)
+        {
+            case 25:
+                OBJ_ActiveSelf(cprUI);
+                cprTimer.TimerStart();
+                break;
+        }
     }
 
     // 외부에서 특정 단계 실행 가능
