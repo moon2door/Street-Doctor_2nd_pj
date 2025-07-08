@@ -89,6 +89,7 @@ public class ForwardRayLine : MonoBehaviour
                 {
                     blinking = true;
                     isBlink = true;
+                    TrainingEvaluator.Instance.didCallHelp = true;
                     blinkTimer = 0f;
                 }
 

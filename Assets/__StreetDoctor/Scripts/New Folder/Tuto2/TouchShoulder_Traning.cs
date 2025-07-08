@@ -9,11 +9,27 @@ public class TouchShoulder_Traning : MonoBehaviour
     public int step;
     private int nextstep = 0;
 
+    public bool isTuto = true;
+
     private void Update()
     {
         if (nextstep > 6)
         {
-            cprTraningStart.TriggerStep(step);
+            if (cprTraningStart != null)
+            {
+                cprTraningStart.TriggerStep(step);
+            }
+            else
+            {
+                if (isTuto == true)
+                {
+                    return;
+                }
+                else if (isTuto == false)
+                {
+                    TrainingEvaluator.Instance.didCheckConscious = true;
+                }
+            }
             isOK = false;
         }
     }

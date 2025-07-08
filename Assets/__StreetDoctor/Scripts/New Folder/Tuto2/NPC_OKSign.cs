@@ -8,13 +8,20 @@ public class NPC_OKSign : MonoBehaviour
 
     void Update()
     {
-        if (forward.isBlink == true)
+        if (forward != null)
         {
-            isBlinking = true;
+            if (forward.isBlink == true)
+            {
+                isBlinking = true;
+            }
+            else
+            {
+                isBlinking = false;
+            }
         }
         else
         {
-            isBlinking = false;
+            return;
         }
     }
 }

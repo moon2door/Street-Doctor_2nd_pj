@@ -54,10 +54,11 @@ public class CPRMain : MonoBehaviour
             if (wasInEndZone && isInStartZone)
             {
                 cprCount++;
+                TrainingEvaluator.Instance.RecordCPRTimestamp(); // 각 CPR 횟수 시간 기록
+
                 Debug.Log($"CPR 카운트 증가: {cprCount}");
 
                 isInStartZone = false;
-
                 endObj.SetActive(false);
                 reObj.SetActive(true);
             }

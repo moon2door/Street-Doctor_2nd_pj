@@ -81,7 +81,15 @@ public class ClickButton : MonoBehaviour
                         if (!isLidOpen)
                         {
                             lidPivot.RotateSmooth(90f); // 열기
-                            cprTS.TriggerStep(targetStep);
+                            if (cprTS != null)
+                            {
+                                cprTS.TriggerStep(targetStep);
+                            }
+                            else
+                            {
+                                TrainingEvaluator.Instance.AddAEDButton("BtnOpen");
+                            }
+                            
                             isLidOpen = true;
                         }
                         else
@@ -94,12 +102,28 @@ public class ClickButton : MonoBehaviour
 
                 case "BtnR":
                     Debug.Log("AED를 시작합니다.");
-                    cprTS.TriggerStep(targetStep);
+                    if (cprTS != null)
+                    {
+                        cprTS.TriggerStep(targetStep);
+                    }
+                    else
+                    {
+                        TrainingEvaluator.Instance.AddAEDButton("BtnR");
+                    }
                     break;
 
                 case "BtnShock":
                     Debug.Log("찌릿 찌릿");
-                    cprTS.TriggerStep(targetStep);
+                    if (cprTS != null)
+                    {
+                        cprTS.TriggerStep(targetStep);
+                    }
+                    else
+                    {
+                        TrainingEvaluator.Instance.AddAEDButton("BtnShock");
+                    }
+
+                    TrainingEvaluator.Instance.PrintFeedback();
                     break;
 
                 case "BtnAgeA":
