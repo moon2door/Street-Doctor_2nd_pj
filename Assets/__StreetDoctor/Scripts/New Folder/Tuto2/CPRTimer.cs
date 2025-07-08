@@ -63,7 +63,7 @@ public class CPRTimer : MonoBehaviour
 
         // UI 업데이트
         cprCount.text = cprMain.cprCount.ToString("F0");
-        timerText.text = timerSec.ToString();
+        timerText.text = timerSec.ToString("F0");
     }
 
 

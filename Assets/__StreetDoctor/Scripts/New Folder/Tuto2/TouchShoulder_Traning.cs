@@ -7,7 +7,16 @@ public class TouchShoulder_Traning : MonoBehaviour
     public CPRTraningStart cprTraningStart;
     private bool isOK = true;
     public int step;
+    private int nextstep = 0;
 
+    private void Update()
+    {
+        if (nextstep > 6)
+        {
+            cprTraningStart.TriggerStep(step);
+            isOK = false;
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log(other.tag);
@@ -16,9 +25,8 @@ public class TouchShoulder_Traning : MonoBehaviour
         {
             if (isOK)
             {
-                cprTraningStart.TriggerStep(step);
+                nextstep++;
                 //Debug.Log("½ÇÇàµÊ");
-                isOK = false;
             }
             else
             {

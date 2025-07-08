@@ -72,7 +72,7 @@ public class CPRMain : MonoBehaviour
 
     IEnumerator AO_Active()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
 
         endObj.SetActive(false);
         reObj.SetActive(false);
