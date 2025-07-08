@@ -27,6 +27,8 @@ public class GrabbableObject : MonoBehaviour
     [Header("오브젝트 고유 ID")]
     public int objectID = 0;
 
+    public bool isOK_CPR;
+
     [Header("머테리얼 색을 바꿀 오브젝트")]
     public GameObject targetObject;
 
@@ -91,7 +93,7 @@ public class GrabbableObject : MonoBehaviour
             if (!materialChanged)
             {
                 targetMaterial.color = new Color(0f, 1f, 0f, 0.35f); // 초록색 반투명
-                materialChanged = true;
+                isOK_CPR = true;
             }
         }
         else
@@ -99,7 +101,7 @@ public class GrabbableObject : MonoBehaviour
             if (materialChanged)
             {
                 targetMaterial.color = new Color(1f, 0f, 0f, 0.35f); // 빨간색 반투명
-                materialChanged = false;
+                isOK_CPR = false;
             }
         }
     }
@@ -149,6 +151,8 @@ public class GrabbableObject : MonoBehaviour
                     transform.SetParentKeepWorldScale(target.transform);
                     transform.localPosition = Vector3.zero;
                     transform.localRotation = Quaternion.identity;
+
+                    isOK_CPR = true;
                     return;
                 }
             }
@@ -159,6 +163,8 @@ public class GrabbableObject : MonoBehaviour
             transform.SetParentKeepWorldScale(returnParent);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
+
+            isOK_CPR = false;
         }
         else
         {

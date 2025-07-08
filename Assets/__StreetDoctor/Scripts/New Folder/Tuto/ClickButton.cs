@@ -13,6 +13,9 @@ public class ClickButton : MonoBehaviour
     public PivotRotation lidPivot; // 뚜껑 회전 스크립트 연결
     private bool isLidOpen = false; // 뚜껑 상태 기억
 
+    public CPRTraningStart cprTS;
+    public int targetStep;
+
     [Header ("머티리얼 컨트롤용 설정")]
     private Renderer myRenderer;
     private Material[] defaultMats;
@@ -69,7 +72,7 @@ public class ClickButton : MonoBehaviour
         if (other.CompareTag("Hand") && !isPressed)
         {
             StartCoroutine(PressAnimation());
-
+            
             switch (gameObject.name)
             {
                 case "BtnOpen":
@@ -78,6 +81,7 @@ public class ClickButton : MonoBehaviour
                         if (!isLidOpen)
                         {
                             lidPivot.RotateSmooth(90f); // 열기
+                            cprTS.TriggerStep(targetStep);
                             isLidOpen = true;
                         }
                         else
@@ -90,10 +94,12 @@ public class ClickButton : MonoBehaviour
 
                 case "BtnR":
                     Debug.Log("AED를 시작합니다.");
+                    cprTS.TriggerStep(targetStep);
                     break;
 
                 case "BtnShock":
                     Debug.Log("찌릿 찌릿");
+                    cprTS.TriggerStep(targetStep);
                     break;
 
                 case "BtnAgeA":
@@ -104,6 +110,7 @@ public class ClickButton : MonoBehaviour
                 case "BtnAgeK":
                     SetMaterialState(BtnAgeAOBJ, false); // A 비활성화
                     SetMaterialState(BtnAgeKOBJ, true);  // K 활성화
+                    cprTS.TriggerStep(targetStep);
                     break;
 
                 default:
