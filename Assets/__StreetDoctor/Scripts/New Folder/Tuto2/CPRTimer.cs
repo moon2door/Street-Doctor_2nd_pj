@@ -26,7 +26,6 @@ public class CPRTimer : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         myTR = GetComponent<CPRTraningStart>();
 
-        cprMain = GameObject.Find("XRHand_PalmR").GetComponent<CPRMain>();
         timerSecF1 = timerSec;
     }
 
@@ -64,7 +63,7 @@ public class CPRTimer : MonoBehaviour
 
         // UI 업데이트
         cprCount.text = cprMain.cprCount.ToString("F0");
-        timerText.text = timerSec.ToString();
+        timerText.text = timerSec.ToString("F0");
     }
 
 
@@ -73,9 +72,9 @@ public class CPRTimer : MonoBehaviour
         if (timerSec <= 0.01f)
         {
             timerSec = timerSecF1;
-            cprMain.cprCount = 0;
         }
 
+        cprMain.cprCount = 0;
         isTimerRunning = true;
     }
 

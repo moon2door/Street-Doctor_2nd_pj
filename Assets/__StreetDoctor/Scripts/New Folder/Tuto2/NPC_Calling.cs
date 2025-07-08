@@ -18,7 +18,7 @@ public class NPC_Calling : MonoBehaviour
             if (npc != null && npc.isBlinking)
             {
                 hasStarted = true;
-                StartCoroutine(DeactivateAllNPCsAfterDelay(3f));
+                StartCoroutine(DeactivateAllNPCsAfterDelay(1f));
                 break;
             }
         }

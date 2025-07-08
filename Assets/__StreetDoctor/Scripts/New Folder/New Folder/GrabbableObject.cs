@@ -27,6 +27,8 @@ public class GrabbableObject : MonoBehaviour
     [Header("오브젝트 고유 ID")]
     public int objectID = 0;
 
+    public bool isOK_CPR;
+
     [Header("머테리얼 색을 바꿀 오브젝트")]
     public GameObject targetObject;
 
@@ -40,10 +42,20 @@ public class GrabbableObject : MonoBehaviour
     private Material targetMaterial;
     private bool materialChanged = false;
 
+    // 튜토리얼 큐브 전용 옵션
+    [Header("튜토리얼 전용 옵션")]
+    public bool isTutorialObject = false;
+    private bool hasTriggered = false;
+    private Vector3 tutorialSavedPosition;
+
     private void Awake()
     {
         myCollider = GetComponent<Collider>();
         savedPosition = transform.position;
+
+        // 튜토리얼
+        if (isTutorialObject)
+            tutorialSavedPosition = transform.position;
 
         if (targetObject != null)
         {
@@ -81,7 +93,7 @@ public class GrabbableObject : MonoBehaviour
             if (!materialChanged)
             {
                 targetMaterial.color = new Color(0f, 1f, 0f, 0.35f); // 초록색 반투명
-                materialChanged = true;
+                isOK_CPR = true;
             }
         }
         else
@@ -89,7 +101,7 @@ public class GrabbableObject : MonoBehaviour
             if (materialChanged)
             {
                 targetMaterial.color = new Color(1f, 0f, 0f, 0.35f); // 빨간색 반투명
-                materialChanged = false;
+                isOK_CPR = false;
             }
         }
     }
@@ -100,11 +112,33 @@ public class GrabbableObject : MonoBehaviour
         transform.SetParentKeepWorldScale(handTransform);
         transform.localPosition = grabOffset;
         transform.localRotation = grabRotationOffset;
+
+        // 튜토리얼 
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+            rb.isKinematic = true;
     }
 
     public void Release()
     {
         isGrabbed = false;
+        // 튜토리얼 
+        if (isTutorialObject)
+        {            
+            transform.SetParent(null);              
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+                var handRb = GetComponentInParent<Rigidbody>();
+                if (handRb != null)
+                {
+                    rb.velocity = handRb.velocity;
+                    rb.angularVelocity = handRb.angularVelocity;
+                }
+            }           
+            return;
+        }
 
         CodeID[] targets = GameObject.FindObjectsOfType<CodeID>();
         foreach (var target in targets)
@@ -117,6 +151,8 @@ public class GrabbableObject : MonoBehaviour
                     transform.SetParentKeepWorldScale(target.transform);
                     transform.localPosition = Vector3.zero;
                     transform.localRotation = Quaternion.identity;
+
+                    isOK_CPR = true;
                     return;
                 }
             }
@@ -127,11 +163,49 @@ public class GrabbableObject : MonoBehaviour
             transform.SetParentKeepWorldScale(returnParent);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
+
+            isOK_CPR = false;
         }
         else
         {
             transform.SetParentKeepWorldScale(null);
         }
+    }
+    //튜토리얼
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!isTutorialObject || hasTriggered) return;
+
+        if (other.CompareTag("BasketZone"))
+        {
+            hasTriggered = true;
+            Debug.Log("[GrabbableObject] 바구니 트리거 감지 → 카운트 후 리셋");
+            if (CubeManager.Instance != null && CubeManager.Instance.basketSFX != null)
+                AudioSource.PlayClipAtPoint(CubeManager.Instance.basketSFX, transform.position);
+            CubeManager.Instance.OnCubeEnteredBasket(this);
+        }
+        else if (other.CompareTag("GroundZone"))
+        {
+            Debug.Log("[GrabbableObject] 바닥 트리거 감지 → 원위치 복귀");
+            ReturnToTutorialPosition();          
+        }
+    }
+    //튜토리얼
+    void ReturnToTutorialPosition()
+    {
+        transform.SetParent(null);
+        transform.position = tutorialSavedPosition;
+        transform.rotation = Quaternion.identity;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+
+        hasTriggered = false;
     }
 
     public void ResetState()
@@ -142,6 +216,11 @@ public class GrabbableObject : MonoBehaviour
         if (targetMaterial != null)
         {
             targetMaterial.color = new Color(1f, 0f, 0f, 0.35f); // 초기 상태로 되돌림
+        }
+        if (isTutorialObject)
+        {
+            tutorialSavedPosition = transform.position;
+            hasTriggered = false;
         }
     }
 }

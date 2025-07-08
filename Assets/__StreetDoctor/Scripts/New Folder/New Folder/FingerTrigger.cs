@@ -12,10 +12,35 @@ public class FingerTrigger : MonoBehaviour
     [Header("터치 시 숫자 표시할 텍스트")]
     public Text phoneText;
 
+    // 👉 모든 인스턴스에서 공유되는 카운터
+    private static int phoneTextFoundCount = 0;
+
     void Start()
     {
-        //phoneText = GameObject.Find("Phone_T").GetComponent<Text>();
-        cprTS = GameObject.Find("Start Zone").GetComponent<CPRTraningStart>();
+        // CPR 트리거 가져오기
+        cprTS = GameObject.Find("Start Zone")?.GetComponent<CPRTraningStart>();
+
+        // 오른손만 탐색 및 카운트 증가
+        if (!isLeftHand)
+        {
+            phoneText = GameObject.Find("Phone_T")?.GetComponent<Text>();
+
+            if (phoneText != null)
+            {
+                phoneTextFoundCount++;
+                Debug.Log($"[FingerTrigger] phoneTextFoundCount: {phoneTextFoundCount}");
+
+                if (phoneTextFoundCount >= 2)
+                {
+                    GameObject phoneObj = GameObject.Find("Phone");
+                    if (phoneObj != null)
+                    {
+                        phoneObj.SetActive(false);
+                        Debug.Log("[FingerTrigger] Phone 오브젝트 비활성화됨");
+                    }
+                }
+            }
+        }
     }
 
     public void Setup(HandGrabber grabber, bool isLeft)
@@ -26,7 +51,6 @@ public class FingerTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        // Grab 대상 처리
         if (other.CompareTag("Grabbable"))
         {
             GrabbableObject obj = other.GetComponent<GrabbableObject>();
@@ -37,11 +61,9 @@ public class FingerTrigger : MonoBehaviour
         if (isLeftHand) return;
         if (phoneText == null) return;
 
-        // ⏱️ 0.5초 쿨타임 체크
         if (Time.time - lastInputTime < 0.5f) return;
         lastInputTime = Time.time;
 
-        // 번호 키패드 처리
         string tag = other.tag;
 
         if (tag.StartsWith("Key"))
@@ -80,7 +102,6 @@ public class FingerTrigger : MonoBehaviour
             if (obj != null)
             {
                 Transform currentHand = isLeftHand ? grabber.leftHandTransform : grabber.rightHandTransform;
-
                 if (obj.transform.parent != currentHand)
                 {
                     grabber.ClearTarget(obj);

@@ -12,7 +12,7 @@ public class ZoneSnapper : MonoBehaviour
     private Color originalColor;
 
     private Renderer rend;
-    private bool hasSnapped = false;
+    
     private void Start()
     {
         rend = GetComponent<Renderer>();
