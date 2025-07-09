@@ -1,12 +1,20 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class RandomPatrol : MonoBehaviour
 {
-    public float patrolRadius = 10f;
-    public float waitTime = 2f;
+    [Header("이동 설정")]
+    public float minPatrolDistance = 3f; // ✅ 최소 이동 거리
+    public float patrolRadius = 10f;     // ✅ 최대 이동 반경
+
+    [Header("대기 시간 설정")]
+    public float waitTimeMin = 2f;       // ✅ 최소 대기 시간
+    public float waitTimeMax = 5f;       // ✅ 최대 대기 시간
+    private float currentWaitTime;       // 랜덤으로 정해질 현재 대기 시간
 
     private NavMeshAgent agent;
+    private Animator anim;
+
     private float waitTimer;
     private bool waiting;
     private bool isStopped = false;
@@ -14,6 +22,8 @@ public class RandomPatrol : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
+
         MoveToRandomPoint();
     }
 
@@ -21,17 +31,24 @@ public class RandomPatrol : MonoBehaviour
     {
         if (isStopped) return;
 
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        if (!agent.pathPending && agent.remainingDistance > agent.stoppingDistance)
         {
+            anim.SetBool("Walk_B", true);
+        }
+        else if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            anim.SetBool("Walk_B", false);
+
             if (!waiting)
             {
                 waitTimer = 0f;
                 waiting = true;
+                currentWaitTime = Random.Range(waitTimeMin, waitTimeMax); // ✅ 대기 시간 랜덤 설정
             }
 
             waitTimer += Time.deltaTime;
 
-            if (waitTimer >= waitTime)
+            if (waitTimer >= currentWaitTime)
             {
                 MoveToRandomPoint();
                 waiting = false;
@@ -41,8 +58,17 @@ public class RandomPatrol : MonoBehaviour
 
     void MoveToRandomPoint()
     {
-        Vector3 randomDirection = Random.insideUnitSphere * patrolRadius;
-        randomDirection.y = 0; // Y�� ����
+        Vector3 randomDirection;
+        float distance;
+
+        // ✅ 최소~최대 거리 범위 내 랜덤 거리 설정
+        do
+        {
+            randomDirection = Random.insideUnitSphere * patrolRadius;
+            randomDirection.y = 0;
+            distance = randomDirection.magnitude;
+        } while (distance < minPatrolDistance);
+
         randomDirection += transform.position;
 
         NavMeshHit hit;
@@ -57,7 +83,9 @@ public class RandomPatrol : MonoBehaviour
         isStopped = true;
         agent.isStopped = true;
 
-        // �� ���⿡�� Y������ 90�� ȸ��
+        anim.SetBool("Walk_B", false);
+        anim.SetTrigger("Dying_T");
+
         transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y + 90f, 0);
     }
 }

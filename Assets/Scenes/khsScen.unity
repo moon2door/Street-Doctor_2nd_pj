@@ -1235,7 +1235,7 @@ PrefabInstance:
     - target: {fileID: 3732412489461408951, guid: eb958de1bbf9fb94dbf5fb54c0b3da27,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3804307828648815880, guid: eb958de1bbf9fb94dbf5fb54c0b3da27,
         type: 3}
@@ -11605,6 +11605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cprTraningStart: {fileID: 1851328729}
   step: 22
+  isTuto: 1
 --- !u!65 &1147748554
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16650,6 +16651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cprTraningStart: {fileID: 1851328729}
   step: 3
+  isTuto: 1
 --- !u!65 &1832282514
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18170,9 +18172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d0c968920f1ce6459f1ddfb86588422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startObj: {fileID: 0}
-  endObj: {fileID: 0}
-  reObj: {fileID: 0}
+  startZone: {fileID: 0}
+  resetZone: {fileID: 0}
+  pressureZones: []
   cprCount: 0
 --- !u!1 &1920078610
 GameObject:

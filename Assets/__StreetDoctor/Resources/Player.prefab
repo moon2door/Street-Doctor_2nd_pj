@@ -121,9 +121,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d0c968920f1ce6459f1ddfb86588422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startObj: {fileID: 0}
-  endObj: {fileID: 0}
-  reObj: {fileID: 0}
+  startZone: {fileID: 0}
+  resetZone: {fileID: 0}
+  pressureZones: []
   cprCount: 0
 --- !u!54 &8821564001654051734
 Rigidbody:

@@ -1,82 +1,109 @@
-using System.Collections;
+ï»¿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CPRMain : MonoBehaviour
 {
-    private bool isInStartZone = false;
-    private bool isInEndZone = false;
-    private bool wasInEndZone = false;
+    [Header("CPR Zone ì˜¤ë¸Œì íŠ¸")]
+    public GameObject startZone;
+    public GameObject resetZone;
+    public GameObject[] pressureZones; // A~E (ìœ„â†’ì•„ëž˜ 1cm ê°„ê²©)
 
-    public GameObject startObj;
-    public GameObject endObj;
-    public GameObject reObj;
+    [Header("ìƒíƒœ ë³€ìˆ˜")]
+    private bool isCPRActive = false;
+    private bool hasPressedDown = false;
     public float cprCount = 0;
 
     void Start()
     {
-        startObj = GameObject.FindWithTag("CPR_Start");
-        endObj = GameObject.FindWithTag("CPR_End");
-        reObj = GameObject.FindWithTag("CPR_Re");
-
-        StartCoroutine(AO_Active());
+        // ì´ˆê¸° ì„¸íŒ…
+        startZone.SetActive(true);
+        resetZone.SetActive(false);
+        SetPressureZones(false);
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("CPR_Start"))
         {
-            isInStartZone = true;
-            endObj.SetActive(true);
-            startObj.SetActive(false);
-
-            Debug.Log("CPR ½ÃÀÛÁ¸ ÁøÀÔ - A ¿ÀºêÁ§Æ® È°¼ºÈ­");
+            BeginCPR();
         }
 
-        else if (other.CompareTag("CPR_End"))
+        else if (isCPRActive && IsPressureZone(other))
         {
-            isInEndZone = true;
-
-            Debug.Log("CPR ³¡ Á¸ ÁøÀÔ");
+            HandlePressureZoneHit(other.gameObject);
         }
 
-        else if (other.CompareTag("CPR_Re"))
+        else if (other.CompareTag("CPR_Re") && hasPressedDown)
         {
-            StartCoroutine(AO_Active());
+            EndCPRCycle();
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    // â–¶ï¸ Start Zone ì§„ìž… ì²˜ë¦¬
+    void BeginCPR()
     {
-        if (other.CompareTag("CPR_End"))
+        startZone.SetActive(false);
+        isCPRActive = true;
+        hasPressedDown = false;
+        SetPressureZones(true); // A~E ì¼œê¸°
+        resetZone.SetActive(false);
+    }
+
+    // â¬‡ï¸ A~E ì••ë°• ê°ì§€ ì²˜ë¦¬
+    void HandlePressureZoneHit(GameObject zone)
+    {
+        if (zone.activeSelf)
         {
-            isInEndZone = false;
-
-            if (wasInEndZone && isInStartZone)
-            {
-                cprCount++;
-                TrainingEvaluator.Instance.RecordCPRTimestamp(); // °¢ CPR È½¼ö ½Ã°£ ±â·Ï
-
-                Debug.Log($"CPR Ä«¿îÆ® Áõ°¡: {cprCount}");
-
-                isInStartZone = false;
-                endObj.SetActive(false);
-                reObj.SetActive(true);
-            }
+            zone.SetActive(false);
+            hasPressedDown = true;
+            resetZone.SetActive(true); // A~E ì¤‘ í•˜ë‚˜ë¼ë„ ëˆŒë¦¬ë©´ ë¦¬ì…‹ì¡´ í™œì„±í™”
         }
     }
 
-    void Update()
+    // â¬†ï¸ ResetZone ì§„ìž… ì‹œ ì²˜ë¦¬
+    void EndCPRCycle()
     {
-        // ¸¶Áö¸· ÇÁ·¹ÀÓ¿¡¼­ EndZone¿¡ ÀÖ¾ú´ÂÁö ÃßÀû
-        wasInEndZone = isInEndZone;
+        // ê¹Šì´ ì²´í¬ (ëª‡ ê°œ êº¼ì¡ŒëŠ”ì§€)
+        int depth = 0;
+        foreach (var zone in pressureZones)
+        {
+            if (!zone.activeSelf) depth++;
+        }
+
+        Debug.Log($"CPR ì••ë°• ê¹Šì´: {depth}cm");
+        TrainingEvaluator.Instance.RecordCPR(depth);
+
+        // ë‹¤ìŒ ì‚¬ì´í´ ì¤€ë¹„
+        cprCount++;
+        Debug.Log($"CPR íšŸìˆ˜ ì¦ê°€: {cprCount}");
+
+        SetPressureZones(false); // A~E êº¼ì£¼ê¸°
+        startZone.SetActive(true); // Start ì¡´ ë‹¤ì‹œ í™œì„±í™”
+        resetZone.SetActive(false);
+        isCPRActive = false;
+        hasPressedDown = false;
     }
 
-    IEnumerator AO_Active()
+    // ðŸ”„ A~E ì˜¤ë¸Œì íŠ¸ ì¼ê´„ ì¼œê¸°/ë„ê¸°
+    void SetPressureZones(bool state)
     {
-        yield return new WaitForSeconds(0.05f);
-
-        endObj.SetActive(false);
-        reObj.SetActive(false);
-        startObj.SetActive(true);
+        foreach (var obj in pressureZones)
+        {
+            obj.SetActive(state);
+        }
     }
+
+    // ì••ë°• ì˜¤ë¸Œì íŠ¸ì¸ì§€ í™•ì¸
+    bool IsPressureZone(Collider other)
+    {
+        foreach (var obj in pressureZones)
+        {
+            if (other.gameObject == obj) return true;
+        }
+        return false;
+    }
+
+    // ì™¸ë¶€ì—ì„œ CPR ì¹´ìš´íŠ¸ í™•ì¸ ê°€ëŠ¥
+    public int GetCPRCount() => (int)cprCount;
 }

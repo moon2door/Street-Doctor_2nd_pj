@@ -12,9 +12,10 @@ public class TrainingEvaluator : MonoBehaviour
 
     private List<string> aedSequence = new List<string>();
 
-    [Header("CPR 시간 기록")]
+    [Header("CPR 시간 및 깊이 기록")]
     private float cprStartTime = -1f; // CPR 시작 기준 시간
-    private List<float> cprTimestamps = new List<float>(); // CPR 수행 시간 (상대 기준)
+    private List<float> cprTimestamps = new List<float>(); // CPR 수행 시간
+    private List<int> cprDepths = new List<int>(); // CPR 깊이 (단위: cm)
 
     void Awake()
     {
@@ -24,14 +25,15 @@ public class TrainingEvaluator : MonoBehaviour
             Destroy(gameObject);
     }
 
-    // ✅ CPR 수행 시 시간 기록 (CPR 시작 이후 상대시간으로)
-    public void RecordCPRTimestamp()
+    // ✅ CPR 수행 시 시간 + 깊이(cm) 기록
+    public void RecordCPR(int depthCm)
     {
         if (cprStartTime < 0)
             cprStartTime = Time.time;
 
         float relativeTime = Time.time - cprStartTime;
         cprTimestamps.Add(relativeTime);
+        cprDepths.Add(depthCm);
     }
 
     // ✅ AED 버튼 순서 기록
@@ -52,10 +54,9 @@ public class TrainingEvaluator : MonoBehaviour
         Debug.Log("====== 훈련 피드백 ======");
 
         LogCheck("어깨를 두드려 의식 확인을", didCheckConscious);
-
         LogCheck("주변 사람에게 AED 요청 및 119 신고 지시를", didCallHelp);
 
-        EvaluateCPR();
+        EvaluateCPR(); // CPR 속도 + 깊이 분석
 
         bool aedCorrect = IsSequenceCorrect(new List<string> { "BtnOpen", "BtnR", "BtnShock" });
         LogCheck("AED 버튼을 올바른 순서대로 누르기", aedCorrect);
@@ -64,7 +65,6 @@ public class TrainingEvaluator : MonoBehaviour
 
         Debug.Log("====== 피드백 종료 ======");
     }
-
 
     // ✅ AED 버튼 순서 평가
     private bool IsSequenceCorrect(List<string> correct)
@@ -78,7 +78,7 @@ public class TrainingEvaluator : MonoBehaviour
         return true;
     }
 
-    // ✅ CPR 속도 평가 (CPR 시작 기준 상대 시간 기준)
+    // ✅ CPR 속도 + 깊이 평가
     private void EvaluateCPR()
     {
         if (cprTimestamps.Count == 0)
@@ -87,20 +87,59 @@ public class TrainingEvaluator : MonoBehaviour
             return;
         }
 
-        float duration = cprTimestamps[cprTimestamps.Count - 1]; // CPR 수행 시간 (시작 후)
+        float duration = cprTimestamps[cprTimestamps.Count - 1]; // CPR 수행 시간
         int totalCount = cprTimestamps.Count;
         float rate = totalCount / duration;
 
         string result = rate >= 1.7f ? " [V] " : " [X] ";
-
         Debug.Log($"{result} CPR 속도: 총 {totalCount}회 / {duration:F1}초 → {rate:F2}회/초");
+
+        EvaluateCPRDepth(); // 👈 깊이 평가 포함
     }
 
+    // ✅ 깊이 분석: 평균 + 분포
+    private void EvaluateCPRDepth()
+    {
+        if (cprDepths.Count == 0)
+        {
+            Debug.Log("[X] CPR 깊이 데이터가 없습니다.");
+            return;
+        }
+
+        float sum = 0f;
+        Dictionary<int, int> depthCounts = new Dictionary<int, int>();
+
+        foreach (int d in cprDepths)
+        {
+            sum += d;
+            if (!depthCounts.ContainsKey(d))
+                depthCounts[d] = 1;
+            else
+                depthCounts[d]++;
+        }
+
+        float average = sum / cprDepths.Count;
+
+        // 평균 깊이 판정 (기준: 4.5cm 이상)
+        string resultMark = average >= 4.5f ? "[V]" : "[X]";
+        Debug.Log($"{resultMark} CPR 평균 깊이: {average:F2}cm");
+
+        // 세부 항목 출력
+        string breakdown = "세부사항:";
+        foreach (var pair in depthCounts)
+        {
+            breakdown += $" {pair.Key}cm: {pair.Value}회";
+        }
+
+        Debug.Log(breakdown);
+    }
+
+
+    // ✅ 공통 로그 출력
     private void LogCheck(string title, bool condition)
     {
         string mark = condition ? "[V]" : "[X]";
         string result = condition ? $"{title} 하였습니다." : $"{title} 하지 않았습니다.";
         Debug.Log($"{mark} {result}");
     }
-
 }
