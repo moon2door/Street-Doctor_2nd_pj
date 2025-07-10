@@ -6,6 +6,7 @@ public class ClothOut : MonoBehaviour
 {
     public Animator myAnim;
     public CPRTraningStart cprTS;
+    public GameObject tshirtObj;
 
     void OnTriggerEnter(Collider other)
     {
@@ -21,7 +22,8 @@ public class ClothOut : MonoBehaviour
     {
         yield return new WaitForSeconds(1.2f);
 
-        this.gameObject.SetActive(false);
+        if (tshirtObj != null)
+            tshirtObj.SetActive(false);
         cprTS.TriggerStep(30);
     }
 }

@@ -92,6 +92,12 @@ public class FingerTrigger : MonoBehaviour
                 phoneText.text = "";
             }
         }
+        //긴급통화 버튼
+        else if (tag == "EmergencyButton")
+        {
+            phoneText.text = "119";
+            cprTS.TriggerStep(12);
+        }
     }
 
     void OnTriggerExit(Collider other)

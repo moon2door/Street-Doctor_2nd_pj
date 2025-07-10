@@ -61,12 +61,24 @@ public class CPRTraningStart : MonoBehaviour
     public GameObject pad1_OBJ;
     public GameObject pad2_OBJ;
 
+    // AED버튼에 에미션 효과를 주기 위한 변수
+    [Header("에미션 머터리얼)")]
+    public Material btnOpen;
+    public Material btnR;
+    public Material btnShock;
+
+    private bool isOpenOn = false;
+    private bool isROn = false;
+    private bool isShockOn = false;
+
+    private Color defaultColor = Color.white;
+
     public TutorialManager tutorialManager;
 
     private void Start()
     {
         mycoll = GetComponent<CapsuleCollider>();
-        cprTimer = GetComponent<CPRTimer>();
+        cprTimer = GetComponent<CPRTimer>();        
     }
 
     void Update()
@@ -146,11 +158,20 @@ public class CPRTraningStart : MonoBehaviour
                 OBJ_ActiveSelf(timerUI);
                 break;
             case 30:
-                OBJ_ActiveSelf(aedOBJ);
+                OBJ_ActiveSelf(aedOBJ);                
+                break;
+            case 31:                
+                StopEmission();//Emission
+                break;
+            case 32:
+                StopEmission();//Emission
                 break;
             case 33:
                 OBJ_ActiveSelf(pad1_OBJ);
                 OBJ_ActiveSelf(pad2_OBJ);
+                break;
+            case 35:
+                StopEmission();//Emission
                 break;
             case 39:
                 OBJ_ActiveSelf(finalObject);
@@ -180,6 +201,30 @@ public class CPRTraningStart : MonoBehaviour
                 break;
             case 29:
                 OBJ_ActiveSelf(clothCol);
+                break;
+            case 30:
+                //Emission
+                if (btnOpen != null)
+                {
+                    btnOpen.color = defaultColor;
+                    InvokeRepeating(nameof(ToggleOpen), 0f, 0.5f);
+                }
+                break;
+            case 31:
+                //Emission
+                if (btnR != null)
+                {
+                    btnR.color = defaultColor;
+                    InvokeRepeating(nameof(TogglePower), 0f, 0.5f);
+                }
+                break;
+            case 34:
+                //Emission
+                if (btnShock != null)
+                {
+                    btnShock.color = defaultColor;
+                    InvokeRepeating(nameof(ToggleShock), 0f, 0.5f);
+                }
                 break;
             case 36:
                 OBJ_ActiveSelf(aedOBJ);
@@ -219,4 +264,38 @@ public class CPRTraningStart : MonoBehaviour
             npc.SetActive(true);
         }
     }
+
+    //Emission on/off 계속
+    void ToggleOpen()
+    {
+        if (btnOpen == null) return;
+        btnOpen.color = isOpenOn ? defaultColor : new Color(1f, 0.2f, 0.2f); // 빨강
+        isOpenOn = !isOpenOn;
+    }
+    void TogglePower()
+    {
+        if (btnR == null) return;
+        btnR.color = isROn ? defaultColor : new Color(0f, 1f, 0.5f); // 청록
+        isROn = !isROn;
+    }
+    void ToggleShock()
+    {
+        if (btnShock == null) return;
+        btnShock.color = isShockOn ? defaultColor : new Color(1f, 0.2f, 0.2f); // 진빨강
+        isShockOn = !isShockOn;
+    }
+    void StopEmission()
+    {
+        CancelInvoke(nameof(ToggleOpen));
+        CancelInvoke(nameof(TogglePower));
+        CancelInvoke(nameof(ToggleShock));
+
+        if (btnOpen != null) btnOpen.color = defaultColor;
+        if (btnR != null) btnR.color = defaultColor;
+        if (btnShock != null) btnShock.color = defaultColor;
+
+        isOpenOn = false;
+        isROn = false;
+        isShockOn = false;
+    }   
 }

@@ -41,7 +41,7 @@ public class CPRTimer : MonoBehaviour
                 isTimerRunning = false;
 
                 // 타이머 종료 후 CPR 횟수 판정
-                if (cprMain.cprCount >= 100f)
+                if (cprMain.cprCount >= 50f)
                 {
                     StartCoroutine(PlayFailureAudioThen(OnClear, clearClip));
                     

@@ -102,16 +102,16 @@ public class ClickButton : MonoBehaviour
                     cprTS.TriggerStep(targetStep);
                     break;
 
-                case "BtnAgeA":
-                    SetMaterialState(BtnAgeAOBJ, true);  // A 활성화
-                    SetMaterialState(BtnAgeKOBJ, false); // K 비활성화
-                    break;
+                //case "BtnAgeA":
+                //    SetMaterialState(BtnAgeAOBJ, true);  // A 활성화
+                //    SetMaterialState(BtnAgeKOBJ, false); // K 비활성화
+                //    break;
 
-                case "BtnAgeK":
-                    SetMaterialState(BtnAgeAOBJ, false); // A 비활성화
-                    SetMaterialState(BtnAgeKOBJ, true);  // K 활성화
-                    cprTS.TriggerStep(targetStep);
-                    break;
+                //case "BtnAgeK":
+                //    SetMaterialState(BtnAgeAOBJ, false); // A 비활성화
+                //    SetMaterialState(BtnAgeKOBJ, true);  // K 활성화
+                //    cprTS.TriggerStep(targetStep);
+                //    break;
 
                 default:
                     Debug.Log($"{gameObject.name} 버튼이 눌림!");

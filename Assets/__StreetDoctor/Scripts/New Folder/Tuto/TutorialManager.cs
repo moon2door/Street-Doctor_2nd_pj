@@ -42,6 +42,8 @@ public class TutorialManager : MonoBehaviour
     [Header("튜토리얼 예시 오브젝트")]
     public GameObject exampleBlow;
     public GameObject exampleReverse;
+    public GameObject exampleGrab;
+    public GameObject exampleBtn;
 
     [Header("튜토리얼 상호작용 오브젝트")]
     public GameObject cubeObject;    
@@ -81,6 +83,7 @@ public class TutorialManager : MonoBehaviour
         ttsClipMap.Add("이제 물건을 잡아보겠습니다.", "tts_014");
         ttsClipMap.Add("표시된 지점이 나타나면\n해당 위치로 이동해주세요.", "tts_015");
         ttsClipMap.Add("눈 앞에 있는 루빅큐브를\n손으로 잡아보세요.", "tts_016");
+        ttsClipMap.Add("앞의 손 모양을 참고하여\n큐브를 집어보세요.", "tts_026");
         ttsClipMap.Add("쥐고 있던 손은 펼치면\n큐브는 손에서 떨어집니다.", "tts_017");
         ttsClipMap.Add("이제 큐브를 들어\n바구니에 3번 넣어주세요.", "tts_018");
         ttsClipMap.Add("훌륭해요!", "tts_019");
@@ -180,7 +183,7 @@ void Start()
         if (cubeObject != null)
             cubeObject.SetActive(true); //  큐브 등장  
                 
-        CubeManager.Instance.StartCubeTask(); //  이제 안전하게 호출        
+        CubeManager.Instance.StartCubeTask(); //  이제 안전하게 호출 
         HideUI();
         if (cubeTargetZone != null)
             cubeTargetZone.SetActive(true); //  큐브 트리거존 등장
@@ -202,8 +205,18 @@ void Start()
         StartCoroutine(HandleCubeGrabInstruction());
     }
     IEnumerator HandleCubeGrabInstruction()
-    {        
-        yield return StartCoroutine(ShowUIWithTTS("눈 앞에 있는 루빅큐브를\n손으로 잡아보세요."));
+    {
+        if (exampleGrab != null)
+        {
+            exampleGrab.SetActive(true);
+            Animator anim = exampleGrab.GetComponent<Animator>();
+            if (anim != null)
+            {
+                anim.Play("Grab", 0, 0f);
+            }
+        }
+        yield return StartCoroutine(ShowUIWithTTS("눈 앞에 있는 루빅큐브를\n손으로 잡아보세요."));     
+        yield return StartCoroutine(ShowUIWithTTS("앞의 손 모양을 참고하여\n큐브를 집어보세요."));
         yield return StartCoroutine(ShowUIWithTTS("쥐고 있던 손은 펼치면\n큐브는 손에서 떨어집니다."));
         yield return StartCoroutine(ShowUIWithTTS("이제 큐브를 들어\n바구니에 3번 넣어주세요."));        
     }
@@ -216,6 +229,8 @@ void Start()
     }
     IEnumerator HandleCubeSuccessMessage()
     {
+        if (exampleGrab != null)
+            exampleGrab.SetActive(false);
         yield return StartCoroutine(ShowUIWithTTS("훌륭해요!")); 
         yield return new WaitForSeconds(1f);
         StartCoroutine(NextTutorialStep());
@@ -247,11 +262,19 @@ void Start()
         StartCoroutine(ButtonPreInstruction());
     }
     IEnumerator ButtonPreInstruction()
-    {                
+    {
+        if (exampleBtn != null)
+            exampleBtn.SetActive(true);
+        Animator anime = exampleBtn.GetComponent<Animator>();
+        if (anime != null)
+        {
+            anime.Play("touchhand", 0, 0f);
+        }
         yield return StartCoroutine(ShowUIWithTTS("문이 열리면\n건물안으로 들어가\n응급처치 교육을 진행하겠습니다."));
         yield return StartCoroutine(ShowUIWithTTS("버튼을 누르면\n앞에 있는 문이 열립니다."));
         yield return StartCoroutine(ShowUIWithTTS("앞에 있는 버튼을\n손으로 눌러주세요."));
-
+        if (exampleBtn != null)
+            exampleBtn.SetActive(false);
         canPressButton = true;
         isMovementLocked = false;
     }

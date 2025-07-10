@@ -15,6 +15,21 @@ TagManager:
   - Basket
   - BasketZone
   - GroundZone
+  - Key9
+  - Key3
+  - Key*
+  - Key4
+  - Key8
+  - CallButton
+  - Key0
+  - Key2
+  - Key5
+  - Key7
+  - Key#
+  - Key6
+  - DelButton
+  - Key1
+  - EmergencyButton
   layers:
   - Default
   - TransparentFX
