@@ -1253,8 +1253,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0371caffd4f9dcd4daa2ed64fd80cf81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minPatrolDistance: 3
   patrolRadius: 10
-  waitTime: 1
+  waitTimeMin: 2
+  waitTimeMax: 5
+  lookStopDistance: 4
+  stuckThresholdTime: 3
+  stuckMoveThreshold: 0.05
 --- !u!136 &327586824
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -8282,7 +8287,7 @@ PrefabInstance:
     - target: {fileID: 5789772096609681215, guid: 86463981e51f9d14faacee7ed8961c5c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.006000042
+      value: 3.49
       objectReference: {fileID: 0}
     - target: {fileID: 5789772096609681215, guid: 86463981e51f9d14faacee7ed8961c5c,
         type: 3}
