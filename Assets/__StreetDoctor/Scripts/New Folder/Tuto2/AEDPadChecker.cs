@@ -19,9 +19,9 @@ public class AEDPadChecker : MonoBehaviour
         if (!triggered && pad1.isOK_CPR && pad2.isOK_CPR)
         {
             triggered = true;
-            cprTS.TriggerStep(34);
+            cprTS.TriggerStep(35);
 
-            //Debug.LogError("34번체크 실행됨");
+            //Debug.LogError("35번체크 실행됨");
         }
     }
 

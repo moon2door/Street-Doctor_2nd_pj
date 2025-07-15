@@ -205,7 +205,8 @@ void Start()
         StartCoroutine(HandleCubeGrabInstruction());
     }
     IEnumerator HandleCubeGrabInstruction()
-    {
+    {        
+        yield return StartCoroutine(ShowUIWithTTS("눈 앞에 있는 루빅큐브를\n손으로 잡아보세요."));
         if (exampleGrab != null)
         {
             exampleGrab.SetActive(true);
@@ -215,7 +216,6 @@ void Start()
                 anim.Play("Grab", 0, 0f);
             }
         }
-        yield return StartCoroutine(ShowUIWithTTS("눈 앞에 있는 루빅큐브를\n손으로 잡아보세요."));     
         yield return StartCoroutine(ShowUIWithTTS("앞의 손 모양을 참고하여\n큐브를 집어보세요."));
         yield return StartCoroutine(ShowUIWithTTS("쥐고 있던 손은 펼치면\n큐브는 손에서 떨어집니다."));
         yield return StartCoroutine(ShowUIWithTTS("이제 큐브를 들어\n바구니에 3번 넣어주세요."));        

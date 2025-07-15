@@ -26,12 +26,18 @@ public class CPRTraningStart : MonoBehaviour
     [Header("오디오 소스")]
     public AudioSource audioSource;
     public AudioClip clearSound;
+    public AudioClip bellSound;
+    public AudioClip emergencySound;
+    public AudioClip shockSound;    
 
     [Header("몇 번째 단계까지 있는지?")]
     public int stepCount;
 
     [Header("소환할 NPC 오브젝트들")]
     public GameObject[] spawnNPC;
+
+    [Header("cpr애니메이션 NPC")]
+    public GameObject cprnpcOBJ;
 
     [Header("어깨 두드리는 손 오브젝트")]
     public GameObject shoulderHand;
@@ -124,7 +130,7 @@ public class CPRTraningStart : MonoBehaviour
         stepIndex++;
 
         // 🎵 특정 단계에서 클리어 사운드 재생
-        int[] playClearSteps = { 3, 7, 12, 22, 30, 31, 32, 33, 34, 35 };
+        int[] playClearSteps = { 3, 7, 12, 22, 30, 32, 33, 34, 41 }; //숫자 변경
         if (System.Array.Exists(playClearSteps, step => step == currentIndex))
         {
             if (audioSource != null && clearSound != null)
@@ -146,6 +152,23 @@ public class CPRTraningStart : MonoBehaviour
                 SpawnNPC();
                 break;
             case 10:
+                OBJ_ActiveSelf(phoneOBJ);
+                break;
+             //119연결음
+            case 12:
+                if (audioSource != null && bellSound != null)
+                {
+                    audioSource.PlayOneShot(bellSound);
+                    yield return new WaitForSeconds(bellSound.length);
+                }
+                yield return new WaitForSeconds(bellSound.length + 0.2f);
+                if (audioSource != null && emergencySound != null)
+                {
+                    audioSource.PlayOneShot(emergencySound);
+                    yield return new WaitForSeconds(emergencySound.length);
+                }
+                yield return new WaitForSeconds(2f);
+                break;
             case 13:
                 OBJ_ActiveSelf(phoneOBJ);
                 break;
@@ -153,27 +176,29 @@ public class CPRTraningStart : MonoBehaviour
             case 23:
                 OBJ_ActiveSelf(cprHand);
                 OBJ_ActiveSelf(cprOBJ);
+                OBJ_ActiveSelf(cprnpcOBJ);
                 break;
             case 26:
                 OBJ_ActiveSelf(timerUI);
+                OBJ_ActiveSelf(cprnpcOBJ);
                 break;
-            case 30:
+            case 31:
                 OBJ_ActiveSelf(aedOBJ);                
                 break;
-            case 31:                
+            case 33:                
                 StopEmission();//Emission
                 break;
-            case 32:
+            case 34:
                 StopEmission();//Emission
                 break;
-            case 33:
+            case 35:
                 OBJ_ActiveSelf(pad1_OBJ);
                 OBJ_ActiveSelf(pad2_OBJ);
                 break;
-            case 35:
+            case 40:
                 StopEmission();//Emission
                 break;
-            case 39:
+            case 43:
                 OBJ_ActiveSelf(finalObject);
                 break;
         }
@@ -195,6 +220,8 @@ public class CPRTraningStart : MonoBehaviour
         // 문구가 끝나고 이벤트 실행
         switch (currentIndex)
         {
+            case 11:                
+                break;
             case 25:
                 OBJ_ActiveSelf(timerUI);
                 cprTimer.TimerStart();
@@ -202,7 +229,7 @@ public class CPRTraningStart : MonoBehaviour
             case 29:
                 OBJ_ActiveSelf(clothCol);
                 break;
-            case 30:
+            case 31:
                 //Emission
                 if (btnOpen != null)
                 {
@@ -210,7 +237,7 @@ public class CPRTraningStart : MonoBehaviour
                     InvokeRepeating(nameof(ToggleOpen), 0f, 0.5f);
                 }
                 break;
-            case 31:
+            case 32:
                 //Emission
                 if (btnR != null)
                 {
@@ -218,7 +245,7 @@ public class CPRTraningStart : MonoBehaviour
                     InvokeRepeating(nameof(TogglePower), 0f, 0.5f);
                 }
                 break;
-            case 34:
+            case 38:
                 //Emission
                 if (btnShock != null)
                 {
@@ -226,10 +253,18 @@ public class CPRTraningStart : MonoBehaviour
                     InvokeRepeating(nameof(ToggleShock), 0f, 0.5f);
                 }
                 break;
-            case 36:
+            case 39:
+                //전기충격효과음
+                if (audioSource != null && shockSound != null)
+                {
+                    audioSource.PlayOneShot(shockSound);
+                    yield return new WaitForSeconds(shockSound.length);
+                }
+                break;
+            case 40:
                 OBJ_ActiveSelf(aedOBJ);
                 break;
-            case 39:
+            case 44:
                 tutorialManager.isMovementLocked = false;
                 break;
         }
