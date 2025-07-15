@@ -4,11 +4,14 @@ using UnityEngine;
 public class TrainingEvaluator : MonoBehaviour
 {
     public static TrainingEvaluator Instance;
+    public CarResponder carResponder;
 
     [Header("Check 항목")]
     public bool didCheckConscious = false;
     public bool didCallHelp = false;
     public bool padsPlacedCorrectly = false;
+
+    public Transform playerTransform;
 
     private List<string> aedSequence = new List<string>();
 
@@ -20,9 +23,20 @@ public class TrainingEvaluator : MonoBehaviour
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject); // ✅ 씬 전환 시 오브젝트 유지
+        }
         else
+        {
             Destroy(gameObject);
+        }
+    }
+
+    private void Update()
+    {
+        if (playerTransform == null)
+            playerTransform = GameObject.Find("cpr_obj_onoff").GetComponent<Transform>();
     }
 
     // ✅ CPR 수행 시 시간 + 깊이(cm) 기록
@@ -64,6 +78,8 @@ public class TrainingEvaluator : MonoBehaviour
         LogCheck("패드를 올바른 위치에 부착", padsPlacedCorrectly);
 
         Debug.Log("====== 피드백 종료 ======");
+
+        carResponder.ActivateResponse(playerTransform);
     }
 
     // ✅ AED 버튼 순서 평가

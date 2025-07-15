@@ -6,6 +6,7 @@ public class NpcManager : MonoBehaviour
     public static NpcManager Instance;
 
     public List<RandomPatrol> allNPCs = new List<RandomPatrol>();
+    private HashSet<RandomPatrol> alreadyReactedNPCs = new HashSet<RandomPatrol>();
 
     private bool isHitOccurred = false;
     private Vector3 fallenNpcPosition;
@@ -43,11 +44,29 @@ public class NpcManager : MonoBehaviour
             if (dist >= minReactDistance && dist <= maxReactDistance)
             {
                 npc.ReactToFallenNPC(fallenNpcPosition);
+                alreadyReactedNPCs.Add(npc);
             }
-            // ✅ else: 범위 밖이면 아무것도 안 함 → 계속 순찰
         }
 
         return true;
+    }
+
+    /// 🆕 쓰러진 이후에도 범위에 들어오는 NPC에게 반응시키기
+    public void Update()
+    {
+        if (!isHitOccurred) return;
+
+        foreach (var npc in allNPCs)
+        {
+            if (alreadyReactedNPCs.Contains(npc)) continue;
+
+            float dist = Vector3.Distance(npc.transform.position, fallenNpcPosition);
+            if (dist >= minReactDistance && dist <= maxReactDistance)
+            {
+                npc.ReactToFallenNPC(fallenNpcPosition);
+                alreadyReactedNPCs.Add(npc);
+            }
+        }
     }
 
     public bool HasTriggered => isHitOccurred;

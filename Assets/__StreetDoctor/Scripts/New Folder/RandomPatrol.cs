@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class RandomPatrol : MonoBehaviour
@@ -11,6 +12,10 @@ public class RandomPatrol : MonoBehaviour
     public float waitTimeMin = 2f;       // ✅ 최소 대기 시간
     public float waitTimeMax = 5f;       // ✅ 최대 대기 시간
     private float currentWaitTime;       // 랜덤으로 정해질 현재 대기 시간
+
+    [Header("쓰러지고 활성화 할 오브젝트")]
+    public GameObject cprobjonoff;
+    public GameObject aedOBJ;
 
     private NavMeshAgent agent;
     private Animator anim;
@@ -35,6 +40,12 @@ public class RandomPatrol : MonoBehaviour
 
         // 🔹 매니저에 자신 등록
         NpcManager.Instance?.RegisterNPC(this);
+
+        if (aedOBJ != null || cprobjonoff != null)
+        {
+            aedOBJ.SetActive(false);
+            cprobjonoff.SetActive(false);
+        }
 
         MoveToRandomPoint();
     }
@@ -81,7 +92,7 @@ public class RandomPatrol : MonoBehaviour
                 stuckTimer += Time.deltaTime;
                 if (stuckTimer > stuckThresholdTime)
                 {
-                    Debug.LogWarning("🔁 NPC stuck detected, force moving to new point.");
+                    //Debug.LogWarning("🔁 NPC stuck detected, force moving to new point.");
                     MoveToRandomPoint();
                     stuckTimer = 0f;
                 }
@@ -146,11 +157,14 @@ public class RandomPatrol : MonoBehaviour
     {
         isStopped = true;
         agent.isStopped = true;
+        anim.applyRootMotion = true;
 
         anim.SetBool("Walk_B", false);
         anim.SetTrigger("Dying_T");
 
         transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y + 90f, 0);
+
+        StartCoroutine(CprObj());
     }
 
     public void ReactToFallenNPC(Vector3 targetPos)
@@ -164,4 +178,12 @@ public class RandomPatrol : MonoBehaviour
         agent.SetDestination(targetPos);
     }
 
+    IEnumerator CprObj()
+    {
+        yield return new WaitForSeconds(2f);
+        cprobjonoff.SetActive(true);
+
+        yield return new WaitForSeconds(120f);
+        aedOBJ.SetActive(true);
+    }
 }

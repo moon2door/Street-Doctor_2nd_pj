@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CPRMain : MonoBehaviour
@@ -12,6 +11,7 @@ public class CPRMain : MonoBehaviour
     [Header("상태 변수")]
     private bool isCPRActive = false;
     private bool hasPressedDown = false;
+    private bool hasfind = false;
     public float cprCount = 0;
 
     void Start()
@@ -20,6 +20,28 @@ public class CPRMain : MonoBehaviour
         startZone.SetActive(true);
         resetZone.SetActive(false);
         SetPressureZones(false);
+    }
+
+    void Update()
+    {
+        if (startZone == null)
+            startZone = GameObject.Find("cpr_Start");
+
+        if (resetZone == null)
+            resetZone = GameObject.Find("cpr_Re");
+
+        if (resetZone != null && !hasfind)
+        {
+            hasfind = true;
+            pressureZones = new GameObject[5];
+            for (int i = 0; i < 5; i++)
+            {
+                string objName = "cpr_" + (i + 1); // cpr_1 ~ cpr_5
+                pressureZones[i] = GameObject.Find(objName);
+            }
+
+            StartCoroutine(Cprzone());
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -106,4 +128,12 @@ public class CPRMain : MonoBehaviour
 
     // 외부에서 CPR 카운트 확인 가능
     public int GetCPRCount() => (int)cprCount;
+
+    IEnumerator Cprzone()
+    {
+        yield return new WaitForSeconds(1f);
+        startZone.SetActive(true);
+        resetZone.SetActive(false);
+        SetPressureZones(false);
+    }
 }

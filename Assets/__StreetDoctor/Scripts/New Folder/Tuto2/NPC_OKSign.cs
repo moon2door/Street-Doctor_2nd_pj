@@ -10,6 +10,7 @@ public class NPC_OKSign : MonoBehaviour
     private void Start()
     {
         myAnim = GetComponent<Animator>();
+        forward = GameObject.Find("XRHand_IndexTipR").GetComponent<ForwardRayLine>();
     }
 
     void Update()
