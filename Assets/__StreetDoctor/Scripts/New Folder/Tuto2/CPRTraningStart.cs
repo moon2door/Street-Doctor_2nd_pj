@@ -130,7 +130,7 @@ public class CPRTraningStart : MonoBehaviour
         stepIndex++;
 
         // 🎵 특정 단계에서 클리어 사운드 재생
-        int[] playClearSteps = { 3, 7, 12, 22, 30, 32, 33, 34, 41 }; //숫자 변경
+        int[] playClearSteps = { 3, 7, 12, 22, 30, 33, 34, 35, 41 }; //숫자 변경
         if (System.Array.Exists(playClearSteps, step => step == currentIndex))
         {
             if (audioSource != null && clearSound != null)
@@ -173,14 +173,15 @@ public class CPRTraningStart : MonoBehaviour
                 OBJ_ActiveSelf(phoneOBJ);
                 break;
             case 21:
-            case 23:
                 OBJ_ActiveSelf(cprHand);
                 OBJ_ActiveSelf(cprOBJ);
-                OBJ_ActiveSelf(cprnpcOBJ);
+                break;
+            case 23:
+                OBJ_ActiveSelf(cprnpcOBJ);                
                 break;
             case 26:
                 OBJ_ActiveSelf(timerUI);
-                OBJ_ActiveSelf(cprnpcOBJ);
+                OBJ_ActiveSelf(cprnpcOBJ);                
                 break;
             case 31:
                 OBJ_ActiveSelf(aedOBJ);                
@@ -189,13 +190,17 @@ public class CPRTraningStart : MonoBehaviour
                 StopEmission();//Emission
                 break;
             case 34:
-                StopEmission();//Emission
-                break;
-            case 35:
+                StopEmission();//Emission                       
                 OBJ_ActiveSelf(pad1_OBJ);
                 OBJ_ActiveSelf(pad2_OBJ);
                 break;
-            case 40:
+            case 41:
+                //전기충격효과음
+                if (audioSource != null && shockSound != null)
+                {
+                    audioSource.PlayOneShot(shockSound);
+                    yield return new WaitForSeconds(shockSound.length);
+                }
                 StopEmission();//Emission
                 break;
             case 43:
@@ -222,6 +227,10 @@ public class CPRTraningStart : MonoBehaviour
         {
             case 11:                
                 break;
+            case 22:
+                OBJ_ActiveSelf(cprHand);
+                OBJ_ActiveSelf(cprOBJ);
+                break;
             case 25:
                 OBJ_ActiveSelf(timerUI);
                 cprTimer.TimerStart();
@@ -229,7 +238,7 @@ public class CPRTraningStart : MonoBehaviour
             case 29:
                 OBJ_ActiveSelf(clothCol);
                 break;
-            case 31:
+            case 32:
                 //Emission
                 if (btnOpen != null)
                 {
@@ -237,7 +246,7 @@ public class CPRTraningStart : MonoBehaviour
                     InvokeRepeating(nameof(ToggleOpen), 0f, 0.5f);
                 }
                 break;
-            case 32:
+            case 33:
                 //Emission
                 if (btnR != null)
                 {
@@ -245,23 +254,15 @@ public class CPRTraningStart : MonoBehaviour
                     InvokeRepeating(nameof(TogglePower), 0f, 0.5f);
                 }
                 break;
-            case 38:
+            case 40:
                 //Emission
                 if (btnShock != null)
                 {
                     btnShock.color = defaultColor;
                     InvokeRepeating(nameof(ToggleShock), 0f, 0.5f);
                 }
-                break;
-            case 39:
-                //전기충격효과음
-                if (audioSource != null && shockSound != null)
-                {
-                    audioSource.PlayOneShot(shockSound);
-                    yield return new WaitForSeconds(shockSound.length);
-                }
-                break;
-            case 40:
+                break;            
+            case 41:
                 OBJ_ActiveSelf(aedOBJ);
                 break;
             case 44:

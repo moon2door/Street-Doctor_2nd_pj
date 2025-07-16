@@ -83,7 +83,7 @@ public class TutorialManager : MonoBehaviour
         ttsClipMap.Add("이제 물건을 잡아보겠습니다.", "tts_014");
         ttsClipMap.Add("표시된 지점이 나타나면\n해당 위치로 이동해주세요.", "tts_015");
         ttsClipMap.Add("눈 앞에 있는 루빅큐브를\n손으로 잡아보세요.", "tts_016");
-        ttsClipMap.Add("앞의 손 모양을 참고하여\n큐브를 집어보세요.", "tts_026");
+        ttsClipMap.Add("앞의 손 모양을 참고하여\n잡아보세요.", "tts_026");
         ttsClipMap.Add("쥐고 있던 손은 펼치면\n큐브는 손에서 떨어집니다.", "tts_017");
         ttsClipMap.Add("이제 큐브를 들어\n바구니에 3번 넣어주세요.", "tts_018");
         ttsClipMap.Add("훌륭해요!", "tts_019");
@@ -216,7 +216,7 @@ void Start()
                 anim.Play("Grab", 0, 0f);
             }
         }
-        yield return StartCoroutine(ShowUIWithTTS("앞의 손 모양을 참고하여\n큐브를 집어보세요."));
+        yield return StartCoroutine(ShowUIWithTTS("앞의 손 모양을 참고하여\n잡아보세요."));
         yield return StartCoroutine(ShowUIWithTTS("쥐고 있던 손은 펼치면\n큐브는 손에서 떨어집니다."));
         yield return StartCoroutine(ShowUIWithTTS("이제 큐브를 들어\n바구니에 3번 넣어주세요."));        
     }
