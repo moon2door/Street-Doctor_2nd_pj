@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class TrainingEvaluator : MonoBehaviour
 {
@@ -20,6 +22,10 @@ public class TrainingEvaluator : MonoBehaviour
     private List<float> cprTimestamps = new List<float>(); // CPR 수행 시간
     private List<int> cprDepths = new List<int>(); // CPR 깊이 (단위: cm)
 
+    [Header("UI 출력")]
+    public Text feedbackText;
+    public GameObject uiOBJ;
+
     void Awake()
     {
         if (Instance == null)
@@ -36,7 +42,14 @@ public class TrainingEvaluator : MonoBehaviour
     private void Update()
     {
         if (playerTransform == null)
-            playerTransform = GameObject.Find("cpr_obj_onoff").GetComponent<Transform>();
+        {
+            GameObject target = GameObject.Find("cpr_obj_onoff");
+
+            if (target != null && target.activeInHierarchy) // 존재하고 활성화된 경우에만
+            {
+                playerTransform = target.transform;
+            }
+        }
     }
 
     // ✅ CPR 수행 시 시간 + 깊이(cm) 기록
@@ -65,22 +78,36 @@ public class TrainingEvaluator : MonoBehaviour
     // ✅ 최종 피드백 출력
     public void PrintFeedback()
     {
-        Debug.Log("====== 훈련 피드백 ======");
+        uiOBJ.SetActive(true);
 
-        LogCheck("어깨를 두드려 의식 확인을", didCheckConscious);
-        LogCheck("주변 사람에게 AED 요청 및 119 신고 지시를", didCallHelp);
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.AppendLine("====== 훈련 피드백 ======");
 
-        EvaluateCPR(); // CPR 속도 + 깊이 분석
+        sb.AppendLine($"어깨를 두드려서 의식을 확인했나요? {(didCheckConscious ? "[V]" : "[X]")}");
+        sb.AppendLine($"주변 사람을 가리켜 지시를 했나요? {(didCallHelp ? "[V]" : "[X]")}");
+
+        if (cprTimestamps.Count == 0)
+        {
+            sb.AppendLine("CPR을 수행했나요? [X]");
+        }
+        else
+        {
+            sb.AppendLine("CPR을 수행했나요? [V]");
+            sb.AppendLine(GetCPRFeedback()); // CPR 평가 결과 텍스트로 반환
+        }
 
         bool aedCorrect = IsSequenceCorrect(new List<string> { "BtnOpen", "BtnR", "BtnShock" });
-        LogCheck("AED 버튼을 올바른 순서대로 누르기", aedCorrect);
+        sb.AppendLine($"AED 버튼을 순서대로 눌렀나요? {(aedCorrect ? "[V]" : "[X]")}");
+        sb.AppendLine($"패드를 올바른 위치에 부착했나요? {(padsPlacedCorrectly ? "[V]" : "[X]")}");
+        sb.AppendLine("====== 피드백 종료 ======");
 
-        LogCheck("패드를 올바른 위치에 부착", padsPlacedCorrectly);
-
-        Debug.Log("====== 피드백 종료 ======");
+        if (feedbackText != null)
+            feedbackText.text = sb.ToString();
 
         carResponder.ActivateResponse(playerTransform);
     }
+
+
 
     // ✅ AED 버튼 순서 평가
     private bool IsSequenceCorrect(List<string> correct)
@@ -94,6 +121,7 @@ public class TrainingEvaluator : MonoBehaviour
         return true;
     }
 
+    /*
     // ✅ CPR 속도 + 깊이 평가
     private void EvaluateCPR()
     {
@@ -149,13 +177,42 @@ public class TrainingEvaluator : MonoBehaviour
 
         Debug.Log(breakdown);
     }
+    */
 
-
-    // ✅ 공통 로그 출력
-    private void LogCheck(string title, bool condition)
+    private string GetCPRFeedback()
     {
-        string mark = condition ? "[V]" : "[X]";
-        string result = condition ? $"{title} 하였습니다." : $"{title} 하지 않았습니다.";
-        Debug.Log($"{mark} {result}");
+        if (cprTimestamps.Count == 0) return "";
+
+        float duration = cprTimestamps[cprTimestamps.Count - 1];
+        int totalCount = cprTimestamps.Count;
+        float rate = totalCount / duration;
+        string rateResult = rate >= 1.7f ? "[V]" : "[X]";
+
+        float sum = 0f;
+        SortedDictionary<int, int> depthCounts = new SortedDictionary<int, int>();
+        foreach (int d in cprDepths)
+        {
+            sum += d;
+            if (!depthCounts.ContainsKey(d))
+                depthCounts[d] = 1;
+            else
+                depthCounts[d]++;
+        }
+
+        float avgDepth = sum / cprDepths.Count;
+        string depthResult = avgDepth >= 4.5f ? "[V]" : "[X]";
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.AppendLine($"CPR 속도: 총 {totalCount}회 / {duration:F1}초 → {rate:F2}회/초 {rateResult}");
+        sb.AppendLine($"CPR 평균 깊이: {avgDepth:F2}cm {depthResult}");
+
+        sb.Append("세부사항:");
+        foreach (var pair in depthCounts)
+        {
+            sb.Append($" {pair.Key}cm: {pair.Value}회");
+        }
+
+        return sb.ToString();
     }
+
 }
