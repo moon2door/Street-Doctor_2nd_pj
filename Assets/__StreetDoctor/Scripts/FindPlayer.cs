@@ -26,11 +26,15 @@ public class FindPlayer : MonoBehaviourPun
 
     void Start()
     {
-        if (!photonView.IsMine)
-        {
-            enabled = false;
-            return;
-        }
+        //if (!photonView.IsMine)
+        //{
+        //    enabled = false;
+        //    return;
+        //}
+        //else
+        //{
+        //    Debug.Log("Æ÷Åæ¾øÀ½");
+        //}
 
         if (camHead == null)
         {

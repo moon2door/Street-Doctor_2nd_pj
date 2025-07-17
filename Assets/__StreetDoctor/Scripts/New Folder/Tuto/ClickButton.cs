@@ -81,7 +81,15 @@ public class ClickButton : MonoBehaviour
                         if (!isLidOpen)
                         {
                             lidPivot.RotateSmooth(90f); // 열기
-                            cprTS.TriggerStep(targetStep);
+                            if (cprTS != null)
+                            {
+                                cprTS.TriggerStep(targetStep);
+                            }
+                            else
+                            {
+                                TrainingEvaluator.Instance.AddAEDButton("BtnOpen");
+                            }
+                            
                             isLidOpen = true;
                         }
                         else
@@ -94,24 +102,40 @@ public class ClickButton : MonoBehaviour
 
                 case "BtnR":
                     Debug.Log("AED를 시작합니다.");
-                    cprTS.TriggerStep(targetStep);
+                    if (cprTS != null)
+                    {
+                        cprTS.TriggerStep(targetStep);
+                    }
+                    else
+                    {
+                        TrainingEvaluator.Instance.AddAEDButton("BtnR");
+                    }
                     break;
 
                 case "BtnShock":
                     Debug.Log("찌릿 찌릿");
-                    cprTS.TriggerStep(targetStep);
+                    if (cprTS != null)
+                    {
+                        cprTS.TriggerStep(targetStep);
+                    }
+                    else
+                    {
+                        TrainingEvaluator.Instance.AddAEDButton("BtnShock");
+                    }
+
+                    TrainingEvaluator.Instance.PrintFeedback();
                     break;
 
-                //case "BtnAgeA":
-                //    SetMaterialState(BtnAgeAOBJ, true);  // A 활성화
-                //    SetMaterialState(BtnAgeKOBJ, false); // K 비활성화
-                //    break;
+                case "BtnAgeA":
+                    SetMaterialState(BtnAgeAOBJ, true);  // A 활성화
+                    SetMaterialState(BtnAgeKOBJ, false); // K 비활성화
+                    break;
 
-                //case "BtnAgeK":
-                //    SetMaterialState(BtnAgeAOBJ, false); // A 비활성화
-                //    SetMaterialState(BtnAgeKOBJ, true);  // K 활성화
-                //    cprTS.TriggerStep(targetStep);
-                //    break;
+                case "BtnAgeK":
+                    SetMaterialState(BtnAgeAOBJ, false); // A 비활성화
+                    SetMaterialState(BtnAgeKOBJ, true);  // K 활성화
+                    cprTS.TriggerStep(targetStep);
+                    break;
 
                 default:
                     Debug.Log($"{gameObject.name} 버튼이 눌림!");

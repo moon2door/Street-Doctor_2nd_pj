@@ -225,6 +225,9 @@ public class CPRTraningStart : MonoBehaviour
         // 문구가 끝나고 이벤트 실행
         switch (currentIndex)
         {
+            case 7:
+                DeSpawnNPC();
+                break;
             case 11:                
                 break;
             case 22:
@@ -298,6 +301,14 @@ public class CPRTraningStart : MonoBehaviour
         foreach (GameObject npc in spawnNPC)
         {
             npc.SetActive(true);
+        }
+    }
+
+    void DeSpawnNPC()
+    {
+        foreach (GameObject npc in spawnNPC)
+        {
+            npc.SetActive(false);
         }
     }
 

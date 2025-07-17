@@ -1,10 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class NPC_Calling : MonoBehaviour
 {
-    [Header("¸ðµç NPC_OKSignÀ» ¿¬°áÇÏ¼¼¿ä")]
-    public NPC_OKSign[] npcList;
+    public ForwardRayLine forward;
     public CPRTraningStart cprTraningStart;
 
     private bool hasStarted = false;
@@ -13,27 +12,28 @@ public class NPC_Calling : MonoBehaviour
     {
         if (hasStarted) return;
 
-        foreach (var npc in npcList)
+        if (forward.isBlink && forward.currentTarget != null)
         {
-            if (npc != null && npc.isBlinking)
-            {
-                hasStarted = true;
-                StartCoroutine(DeactivateAllNPCsAfterDelay(1f));
-                break;
-            }
+            hasStarted = true;
+            StartCoroutine(HandleSingleNPC(forward.currentTarget));
         }
     }
 
-    IEnumerator DeactivateAllNPCsAfterDelay(float delay)
+    IEnumerator HandleSingleNPC(NPC_OKSign targetNPC)
     {
-        yield return new WaitForSeconds(delay);
+        targetNPC.PlayPhoneAnim(); // ì •í™•ížˆ ê°€ë¦¬í‚¨ NPCë§Œ
+        yield return new WaitForSeconds(1f);
 
-        cprTraningStart.TriggerStep(7);
-
-        foreach (var npc in npcList)
+        if (cprTraningStart != null)
         {
-            if (npc != null)
-                npc.gameObject.SetActive(false);
+            cprTraningStart.TriggerStep(7);
+
+                if (targetNPC != null)
+                targetNPC.gameObject.SetActive(false);
+        }
+        else
+        {
+            yield break;
         }
     }
 }

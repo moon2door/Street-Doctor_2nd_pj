@@ -17,6 +17,11 @@ public class HandPalmMove : MonoBehaviour
     public float moveSpeed = 1.5f;
     public float palmMoveThreshold = 0.5f;
 
+    [Header("소리")]
+    public AudioSource footstepAudio;
+    public AudioClip footstepClip;
+
+
     private CharacterController characterController;
 
     void Start()
@@ -33,6 +38,8 @@ public class HandPalmMove : MonoBehaviour
         rightHand = GameObject.Find("RightHandAnchor").transform;
         ovrHandRight = GameObject.Find("OVRRightHandDataSource").GetComponent<OVRHand>();
 
+        footstepAudio = GetComponent<AudioSource>();
+
     }
 
     void Update()
@@ -41,7 +48,11 @@ public class HandPalmMove : MonoBehaviour
         if (TutorialManager.Instance != null && !TutorialManager.Instance.IsMovementAllowed())
             return;
 
-        if (!IsFist()) return;
+        if (!IsFist())
+        {
+            StopFootstepSound();
+            return;
+        }
 
         float upDotL = Vector3.Dot(leftHand.up, Vector3.up);
         float upDotR = Vector3.Dot(rightHand.up, Vector3.up);
@@ -60,8 +71,36 @@ public class HandPalmMove : MonoBehaviour
         }
 
         moveDir.y = 0;
-        characterController.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
+
+        if (moveDir != Vector3.zero)
+        {
+            characterController.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
+            PlayFootstepSound(); // 이동 시 발소리 재생
+        }
+        else
+        {
+            StopFootstepSound(); // 멈출 경우 소리 정지
+        }
     }
+
+    void PlayFootstepSound()
+    {
+        if (footstepAudio != null && footstepClip != null && !footstepAudio.isPlaying)
+        {
+            footstepAudio.clip = footstepClip;
+            footstepAudio.loop = true;
+            footstepAudio.Play();
+        }
+    }
+
+    void StopFootstepSound()
+    {
+        if (footstepAudio != null && footstepAudio.isPlaying)
+        {
+            footstepAudio.Stop();
+        }
+    }
+
     // 튜토리얼
     void OnTriggerEnter(Collider other)
     {
@@ -91,19 +130,16 @@ public class HandPalmMove : MonoBehaviour
         float threshold = 0.3f;
 
         // 왼손
-        float thumbL = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
         float indexL = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Index);
         float middleL = ovrHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
 
         // 오른손
-        float thumbR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
         float indexR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Index);
         float middleR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
 
         //Debug.Log($"[왼] 엄지:{thumbL:F2}, 검지:{indexL:F2}, 중지:{middleL:F2} || [오] 엄지:{thumbR:F2}, 검지:{indexR:F2}, 중지:{middleR:F2}");
 
-        return thumbL > threshold && indexL > threshold && middleL > threshold &&
-               thumbR > threshold && indexR > threshold && middleR > threshold;
+        return indexL > threshold && middleL > threshold && indexR > threshold && middleR > threshold;
     }    
 
    

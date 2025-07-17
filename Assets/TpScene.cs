@@ -5,11 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class TpScene : MonoBehaviour
 {
+    public string sceneName;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            SceneManager.LoadScene("khsScen");
+            SceneManager.LoadScene(sceneName);
         }
     }
 }

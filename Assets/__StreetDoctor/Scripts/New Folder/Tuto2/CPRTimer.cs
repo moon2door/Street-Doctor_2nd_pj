@@ -6,6 +6,7 @@ public class CPRTimer : MonoBehaviour
 {
     public Text timerText;
     public Text cprCount;
+    public Text cprDepth;
     public CPRMain cprMain;
 
     public AudioSource audioSource;
@@ -62,8 +63,9 @@ public class CPRTimer : MonoBehaviour
         }
 
         // UI 업데이트
-        cprCount.text = cprMain.cprCount.ToString("F0");
-        timerText.text = timerSec.ToString("F0");
+        cprCount.text = "CPR 횟수 : " + cprMain.cprCount.ToString("F0") + " / 30";
+        timerText.text = "남은시간 : " + timerSec.ToString("F0") + "초";
+        cprDepth.text = "압박깊이 : " + cprMain.depth.ToString("F0") + "cm";
     }
 
 

@@ -5,11 +5,13 @@ public class ForwardRayLine : MonoBehaviour
 {
     public float lineLength = 2f;
     public Vector3 offset = Vector3.zero;
+    public LayerMask npcLayerMask;
 
     [Header("참조 스크립트")]
     public LeftHandFistDetector fistDetector;
 
-    public bool isBlink;
+    [HideInInspector] public bool isBlink;
+    [HideInInspector] public NPC_OKSign currentTarget = null; // ✅ 현재 감지된 NPC
 
     private GameObject currentOutlined;
     private GameObject lastHitObj = null;
@@ -46,9 +48,11 @@ public class ForwardRayLine : MonoBehaviour
         Vector3 direction = transform.forward;
         Debug.DrawRay(start, direction * lineLength, Color.red);
 
-        if (Physics.Raycast(start, direction, out RaycastHit hit, lineLength))
+        if (Physics.Raycast(start, direction, out RaycastHit hit, lineLength, npcLayerMask, QueryTriggerInteraction.Collide))
         {
             GameObject hitObj = hit.collider.gameObject;
+
+            //Debug.LogError($"Ray가 닿은 오브젝트: {hitObj.name}");
 
             // 🛑 Outline 없으면 무시
             if (hitObj.GetComponent<Outline>() == null)
@@ -58,6 +62,7 @@ public class ForwardRayLine : MonoBehaviour
                 currentOutlined = null;
                 lastHitObj = null;
                 currentProgressImage = null;
+                currentTarget = null; // ✅ 감지된 NPC 초기화
                 return;
             }
 
@@ -89,7 +94,12 @@ public class ForwardRayLine : MonoBehaviour
                 {
                     blinking = true;
                     isBlink = true;
+
+                    TrainingEvaluator.Instance.didCallHelp = true;
                     blinkTimer = 0f;
+
+                    // ✅ 감지된 NPC 저장
+                    currentTarget = hitObj.GetComponent<NPC_OKSign>();
                 }
 
                 if (blinking)
@@ -112,6 +122,7 @@ public class ForwardRayLine : MonoBehaviour
             currentOutlined = null;
             lastHitObj = null;
             currentProgressImage = null;
+            currentTarget = null; // ✅ 레이가 닿지 않으면 초기화
         }
     }
 
@@ -121,6 +132,7 @@ public class ForwardRayLine : MonoBehaviour
         isBlink = false;
         hoverTime = 0f;
         blinkTimer = 0f;
+        currentTarget = null;
 
         if (currentProgressImage != null)
             currentProgressImage.fillAmount = 0f;
