@@ -62,8 +62,8 @@ public class CPRTimer : MonoBehaviour
         }
 
         // UI 업데이트
-        cprCount.text = cprMain.cprCount.ToString("F0");
-        timerText.text = timerSec.ToString("F0");
+        cprCount.text = "CPR횟수 : " + cprMain.cprCount.ToString("F0") + " / 30 회";
+        timerText.text = "남은시간 : " + timerSec.ToString("F0") + "초";
     }
 
 
