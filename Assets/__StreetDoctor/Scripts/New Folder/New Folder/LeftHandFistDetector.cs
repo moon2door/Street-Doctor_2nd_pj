@@ -18,10 +18,9 @@ public class LeftHandFistDetector : MonoBehaviour
     {
         if (ovrHandLeft == null) return false;
 
-        float t = ovrHandLeft.GetFingerPinchStrength(OVRHand.HandFinger.Thumb);
         float i = ovrHandLeft.GetFingerPinchStrength(OVRHand.HandFinger.Index);
         float m = ovrHandLeft.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
 
-        return t > 0.5f && i > 0.5f && m > 0.5f;
+        return  i > 0.5f && m > 0.5f;
     }
 }

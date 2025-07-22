@@ -6,7 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/khsScen.unity
+    path: Assets/Scenes/TitleScene.unity
+    guid: 5ade2fcf0bc85044c8c6494effc256a3
+  - enabled: 1
+    path: Assets/Scenes/Guide1.unity
+    guid: ef8f8505f65bcf1409c16ad12912de7a
+  - enabled: 1
+    path: Assets/Scenes/Guide2.unity
     guid: ec20a8e54ea9e1444b32926d55faecd0
   - enabled: 1
     path: Assets/Scenes/PlayReal.unity

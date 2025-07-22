@@ -137,11 +137,8 @@ public class HandPalmMove : MonoBehaviour
         float indexR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Index);
         float middleR = ovrHandRight.GetFingerPinchStrength(OVRHand.HandFinger.Middle);
 
-        //Debug.Log($"[왼] 엄지:{thumbL:F2}, 검지:{indexL:F2}, 중지:{middleL:F2} || [오] 엄지:{thumbR:F2}, 검지:{indexR:F2}, 중지:{middleR:F2}");
+        Debug.Log($"검지:{indexL:F2}, 중지:{middleL:F2} || 검지:{indexR:F2}, 중지:{middleR:F2}");
 
         return indexL > threshold && middleL > threshold && indexR > threshold && middleR > threshold;
     }    
-
-   
-
 }

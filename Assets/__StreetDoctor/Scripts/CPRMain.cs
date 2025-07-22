@@ -16,7 +16,8 @@ public class CPRMain : MonoBehaviour
     public int depth = 0;
 
     [Header("사운드 관련")]
-    public AudioSource myAudio;
+    public AudioSource duAudio;
+    public AudioSource genAudio;
     public AudioClip duClip;
     public AudioClip genClip;
 
@@ -26,8 +27,6 @@ public class CPRMain : MonoBehaviour
         startZone.SetActive(true);
         resetZone.SetActive(false);
         SetPressureZones(false);
-
-        myAudio = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -90,9 +89,9 @@ public class CPRMain : MonoBehaviour
             resetZone.SetActive(true); // A~E 중 하나라도 눌리면 리셋존 활성화
 
             // ✅ 마지막 zone일 경우 duClip 재생
-            if (zone == pressureZones[pressureZones.Length - 1] && duClip != null && myAudio != null)
+            if (zone == pressureZones[pressureZones.Length - 1] && duClip != null && duAudio != null)
             {
-                myAudio.PlayOneShot(duClip);
+                duAudio.PlayOneShot(duClip);
             }
         }
     }
@@ -102,9 +101,9 @@ public class CPRMain : MonoBehaviour
     void EndCPRCycle()
     {
         // ✅ genClip 재생
-        if (genClip != null && myAudio != null)
+        if (genClip != null && genAudio != null)
         {
-            myAudio.PlayOneShot(genClip);
+            genAudio.PlayOneShot(genClip);
         }
 
         // 깊이 체크

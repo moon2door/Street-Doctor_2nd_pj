@@ -10,6 +10,7 @@ public class TouchShoulder_Traning : MonoBehaviour
     private int nextstep = 0;
 
     public bool isTuto = true;
+    public bool isCPR = false;
 
     private void Update()
     {
@@ -18,6 +19,11 @@ public class TouchShoulder_Traning : MonoBehaviour
             if (cprTraningStart != null)
             {
                 cprTraningStart.TriggerStep(step);
+                if (isCPR)
+                {
+                    Collider coll = GetComponent<Collider>();
+                    coll.enabled = false;
+                }
             }
             else
             {

@@ -84,6 +84,5 @@ public class CarResponder : MonoBehaviour
     IEnumerator StopAudioAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        myAudio.Stop();
     }
 }
