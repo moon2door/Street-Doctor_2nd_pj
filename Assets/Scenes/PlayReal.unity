@@ -12275,7 +12275,7 @@ GameObject:
   - component: {fileID: 95289831}
   - component: {fileID: 95289830}
   m_Layer: 0
-  m_Name: Directional Light (2)
+  m_Name: Directional Light _ Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96016,7 +96016,7 @@ GameObject:
   - component: {fileID: 960353049}
   - component: {fileID: 960353048}
   m_Layer: 0
-  m_Name: Directional Light (3)
+  m_Name: Directional Light _ Sub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108228,7 +108228,7 @@ GameObject:
   - component: {fileID: 1124581650}
   - component: {fileID: 1124581649}
   m_Layer: 0
-  m_Name: Terrain (1)
+  m_Name: Terrain _ 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
@@ -111251,7 +111251,7 @@ GameObject:
   - component: {fileID: 1158807796}
   - component: {fileID: 1158807795}
   m_Layer: 0
-  m_Name: Terrain (2)
+  m_Name: Terrain _ 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
@@ -179183,7 +179183,7 @@ GameObject:
   - component: {fileID: 1940410561}
   - component: {fileID: 1940410560}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: FadeOutCanvus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196126,31 +196126,31 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1226252946}
   - {fileID: 95289832}
   - {fileID: 960353050}
-  - {fileID: 1391672938}
-  - {fileID: 1075599240}
+  - {fileID: 2013843491}
   - {fileID: 1605398068}
   - {fileID: 1984659462}
+  - {fileID: 1124581651}
+  - {fileID: 1158807797}
+  - {fileID: 1461208846}
+  - {fileID: 636416305}
+  - {fileID: 2005288543}
+  - {fileID: 1499414263}
+  - {fileID: 1075599240}
+  - {fileID: 1391672938}
   - {fileID: 1489780980}
   - {fileID: 684868471}
-  - {fileID: 2013843491}
-  - {fileID: 1124581651}
   - {fileID: 714625958}
   - {fileID: 1744963337}
-  - {fileID: 636416305}
-  - {fileID: 1499414263}
   - {fileID: 641241481}
   - {fileID: 371465326}
-  - {fileID: 1158807797}
   - {fileID: 680648289}
   - {fileID: 1735579655}
   - {fileID: 596303937}
-  - {fileID: 2005288543}
-  - {fileID: 1461208846}
   - {fileID: 136607047}
   - {fileID: 1827597072}
   - {fileID: 1598821320}
   - {fileID: 1812010471}
-  - {fileID: 1226252946}
   - {fileID: 1940410563}

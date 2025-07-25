@@ -92,7 +92,10 @@ public class CPRTraningStart : MonoBehaviour
         if (!isTriggered) return;
 
         isTriggered = false;
-        tutorialManager.isMovementLocked = true;
+        if (tutorialManager != null)
+        {
+            tutorialManager.isMovementLocked = true;
+        }
         mycoll.enabled = false;
         StartCoroutine(PlayFullSequence());
     }
